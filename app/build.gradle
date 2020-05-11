@@ -3,9 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-def localPropertiesFile = rootProject.file("local.properties")
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(localPropertiesFile))
+def apiKeyPropertiesFile = rootProject.file("apikey.properties")
+def apiKeyProperties = new Properties()
+apiKeyProperties.load(new FileInputStream(apiKeyPropertiesFile))
 
 android {
     compileSdkVersion 29
@@ -19,8 +19,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resValue "string", "NAVER_CLIENT_ID", localProperties['NAVER_CLIENT_ID']
-        resValue "string", "NAVER_CLIENT_SECRET", localProperties['NAVER_CLIENT_SECRET']
+        resValue "string", "NAVER_CLIENT_ID", apiKeyProperties['NAVER_CLIENT_ID']
+        resValue "string", "NAVER_CLIENT_SECRET", apiKeyProperties['NAVER_CLIENT_SECRET']
     }
 
     buildTypes {
