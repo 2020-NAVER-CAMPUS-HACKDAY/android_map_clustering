@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
     compileSdkVersion 29
@@ -14,6 +19,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resValue "string", "NAVER_CLIENT_ID", localProperties['NAVER_CLIENT_ID']
+        resValue "string", "NAVER_CLIENT_SECRET", localProperties['NAVER_CLIENT_SECRET']
     }
 
     buildTypes {
@@ -21,6 +28,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    dataBinding {
+        enabled = true
     }
 
 }
@@ -31,7 +42,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // 네이버 지도 SDK
+    implementation 'com.naver.maps:map-sdk:3.7.1'
 }
