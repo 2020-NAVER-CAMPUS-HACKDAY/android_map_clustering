@@ -2,5 +2,5 @@ apply plugin: 'com.android.application'
 apply from: '../common.gradle'
 
 dependencies {
-    implementation project(':geodata-provider')
+    implementation project(':asset-data-provider')
 }
