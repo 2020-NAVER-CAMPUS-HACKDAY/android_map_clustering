@@ -1,5 +1,7 @@
 package com.naver.hackday2020
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
@@ -17,6 +19,12 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("com.naver.hackday2020.test", appContext.packageName)
+    }
+
+    @Test
+    fun useAppContextInNewWay() {
+        val appContext: Context = ApplicationProvider.getApplicationContext()
         assertEquals("com.naver.hackday2020.test", appContext.packageName)
     }
 }

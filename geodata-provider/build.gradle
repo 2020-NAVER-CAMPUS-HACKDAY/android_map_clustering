@@ -1,2 +1,10 @@
 apply plugin: 'com.android.library'
 apply from: '../common.gradle'
+
+android {
+    sourceSets {
+        androidTest {
+            assets.srcDirs = ['src/androidTest/res/assets/']
+        }
+    }
+}
