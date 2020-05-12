@@ -14,6 +14,7 @@ object JsonConverter {
         json.parse(serializer, jsonString)
     } catch (e: JsonDecodingException) {
         Log.e(tag, "jsonString is not a valid json format")
+        e.printStackTrace()
         null
     }
 }
