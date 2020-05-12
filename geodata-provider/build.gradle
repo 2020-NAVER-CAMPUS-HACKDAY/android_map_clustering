@@ -4,7 +4,9 @@ apply from: '../common.gradle'
 android {
     sourceSets {
         androidTest {
-            assets.srcDirs = ['src/androidTest/res/assets/']
+            assets {
+                srcDirs 'src/androidTest/res/assets/'
+            }
         }
     }
 }
