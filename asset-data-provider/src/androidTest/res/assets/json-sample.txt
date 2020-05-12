@@ -1,0 +1,10 @@
+{
+  "name": "그린팩토리",
+  "road_address": "경기도 성남시 분당구 불정로 6 그린팩토리",
+  "jibun_address": "경기도 성남시 분당구 정자동 178-1",
+  "phone_number": "",
+  "x": "127.1054328",
+  "y": "37.3595963",
+  "distance": 0,
+  "sessionId": "HGL0_mYBGUvljfTILX-R"
+}
