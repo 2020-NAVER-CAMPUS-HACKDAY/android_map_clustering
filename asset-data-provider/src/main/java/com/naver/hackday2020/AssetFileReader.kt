@@ -1,6 +1,7 @@
 package com.naver.hackday2020
 
 import android.content.Context
+import android.util.JsonReader
 import android.util.Log
 import java.io.BufferedReader
 import java.io.IOException
@@ -25,10 +26,18 @@ class AssetFileReader(context: Context) {
         return try {
             bufferedReader.use(BufferedReader::readText)
         } catch (e: OutOfMemoryError) {
-            Log.e(tag, "failed to extractAssetContent.")
+            Log.e(tag, "file is too large to read")
             e.printStackTrace()
             ""
         }
+    }
+
+    fun getJsonReader(
+        fileName: String,
+        charset: String = StandardCharsets.UTF_8.name()
+    ): JsonReader? {
+        val inputStream = extractStreamFromAsset(fileName) ?: return null
+        return JsonReader(inputStream.reader(Charset.forName(charset)))
     }
 
     private fun extractStreamFromAsset(fileName: String): InputStream? {

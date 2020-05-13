@@ -2,6 +2,7 @@ package com.naver.hackday2020
 
 import androidx.test.core.app.ApplicationProvider
 import com.naver.hackday2020.data.Place
+import com.naver.hackday2020.data.ReadablePlace
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
@@ -34,6 +35,38 @@ class AssetDataProviderTest {
             object : OnDataLoadedCallback<Place> {
                 override fun onDataReady(data: Place) {
                     assertEquals(data, samplePlace)
+                }
+
+                override fun onDataLoadFailed() {
+                    fail()
+                }
+            })
+    }
+
+    @Test
+    fun receiveData_WithReadableItem() {
+        val data = assetDataProvider.receiveData(sampleFileName, ReadablePlace())
+        assertEquals(data!!.name, samplePlace.name)
+        assertEquals(data.distance, samplePlace.distance)
+        assertEquals(data.roadAddress, samplePlace.roadAddress)
+        assertEquals(data.jibunAddress, samplePlace.jibunAddress)
+        assertEquals(data.x, samplePlace.x)
+        assertEquals(data.y, samplePlace.y)
+    }
+
+    @Test
+    fun receiveDataAsync_WithReadableItem() {
+        assetDataProvider.receiveDataAsync(
+            sampleFileName,
+            ReadablePlace(),
+            object : OnDataLoadedCallback<ReadablePlace> {
+                override fun onDataReady(data: ReadablePlace) {
+                    assertEquals(data.name, samplePlace.name)
+                    assertEquals(data.distance, samplePlace.distance)
+                    assertEquals(data.roadAddress, samplePlace.roadAddress)
+                    assertEquals(data.jibunAddress, samplePlace.jibunAddress)
+                    assertEquals(data.x, samplePlace.x)
+                    assertEquals(data.y, samplePlace.y)
                 }
 
                 override fun onDataLoadFailed() {
