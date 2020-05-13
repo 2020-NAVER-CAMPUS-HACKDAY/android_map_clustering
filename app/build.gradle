@@ -15,6 +15,13 @@ android {
     dataBinding {
         enabled = true
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src/main/res/assets'
+            }
+        }
+    }
 }
 
 dependencies {
