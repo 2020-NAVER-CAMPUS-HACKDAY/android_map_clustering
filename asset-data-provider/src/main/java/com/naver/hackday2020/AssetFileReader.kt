@@ -24,12 +24,10 @@ class AssetFileReader(context: Context) {
 
         return try {
             bufferedReader.use(BufferedReader::readText)
-        } catch (e: Exception) {
+        } catch (e: OutOfMemoryError) {
             Log.e(tag, "failed to extractAssetContent.")
             e.printStackTrace()
             ""
-        } finally {
-            inputStream.close()
         }
     }
 
