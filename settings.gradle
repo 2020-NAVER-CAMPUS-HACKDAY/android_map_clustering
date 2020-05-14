@@ -1,3 +1,3 @@
 rootProject.name='MapClustering'
 include ':app'
-include ':geodata-provider'
+include ':asset-data-provider'
