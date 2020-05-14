@@ -13,8 +13,7 @@ object JsonConverter {
     fun <T> jsonToObject(serializer: DeserializationStrategy<T>, jsonString: String): T? = try {
         json.parse(serializer, jsonString)
     } catch (e: JsonDecodingException) {
-        Log.e(tag, "jsonString is not a valid json format")
-        e.printStackTrace()
+        Log.e(tag, "jsonString is not a valid json format. ${e.message}")
         null
     }
 }

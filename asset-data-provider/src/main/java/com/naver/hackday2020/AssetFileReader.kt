@@ -26,8 +26,7 @@ class AssetFileReader(context: Context) {
         return try {
             bufferedReader.use(BufferedReader::readText)
         } catch (e: OutOfMemoryError) {
-            Log.e(tag, "file is too large to read")
-            e.printStackTrace()
+            Log.e(tag, "file is too large to read. ${e.message}")
             ""
         }
     }
@@ -49,8 +48,7 @@ class AssetFileReader(context: Context) {
         return try {
             assetManager.open(fileName)
         } catch (e: IOException) {
-            Log.e(tag, "failed to load $fileName")
-            e.printStackTrace()
+            Log.e(tag, "failed to load $fileName. ${e.message}")
             null
         }
     }

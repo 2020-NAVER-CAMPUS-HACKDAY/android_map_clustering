@@ -40,8 +40,7 @@ class AssetDataProvider(private val context: Context) {
         return try {
             reader.use(resultTypeItem::readItem)
         } catch (e: IOException) {
-            Log.e(tag, "failed to readItem")
-            e.printStackTrace()
+            Log.e(tag, "failed to readItem. ${e.message}")
             null
         }
     }
