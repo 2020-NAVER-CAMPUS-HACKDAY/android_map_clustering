@@ -7,15 +7,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Place(
     @SerialName("category")
-    val category: String = "",
+    val category: String,
     @SerialName("id")
-    val id: String = "",
+    val id: String,
     @SerialName("imageUrl")
-    val imageUrl: String? = "",
+    val imageUrl: String?,
     @SerialName("name")
-    val name: String = "",
+    val name: String,
     @SerialName("x")
-    val x: String = "",
+    val x: Double,
     @SerialName("y")
-    val y: String = ""
+    val y: Double
 )
