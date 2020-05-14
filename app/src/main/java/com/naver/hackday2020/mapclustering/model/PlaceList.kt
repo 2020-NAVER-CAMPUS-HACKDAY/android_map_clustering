@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlaceInfo(
+data class PlaceList(
     @SerialName("places")
     val places: List<Place> = listOf()
 )
