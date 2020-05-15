@@ -1,5 +1,6 @@
 package com.naver.hackday2020.mapclustering.clustering.algo
 
+import android.util.Log
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.geometry.Bounds
@@ -168,6 +169,8 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                 visitedCandidates.addAll(clusterItems)
             }
         }
+        // 결과 확인용 테스트 로그
+        Log.d(tag, "results = $results")
         return results
     }
 
@@ -208,5 +211,6 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
     companion object {
         private const val DEFAULT_MAX_DISTANCE_AT_ZOOM = 100 // essentially 100 dp.
         private val PROJECTION = SphericalMercatorProjection(1.0)
+        private const val tag = "Algorithm" // 테스트 로그용 tag
     }
 }
