@@ -21,12 +21,12 @@ class ClusterManager<T : ClusterItem>(
     private val clusterTaskLock = ReentrantReadWriteLock()
     private var clusterTask: ClusterTask = ClusterTask()
 
-    var algorithm: Algorithm<T>?
+    var algorithm: Algorithm<T>
         get() = clusterAlgorithm
         set(algorithm) = if (algorithm is ScreenBasedAlgorithm) {
             setAlgorithm(algorithm)
         } else {
-            setAlgorithm(ScreenBasedAlgorithmAdapter(algorithm!!))
+            setAlgorithm(ScreenBasedAlgorithmAdapter(algorithm))
         }
 
     init {
