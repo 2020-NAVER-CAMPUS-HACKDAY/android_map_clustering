@@ -186,7 +186,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         )
     }
 
-    class QuadItem<T : ClusterItem>(val clusterItem: T) : PointQuadTree.Item, Cluster<T> {
+    data class QuadItem<T : ClusterItem>(val clusterItem: T) : PointQuadTree.Item, Cluster<T> {
         override val point: Point
         override val position: LatLng = clusterItem.getPosition()
         override val items: Set<T>
@@ -197,14 +197,6 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         init {
             point = PROJECTION.toPoint(position)
             items = setOf(clusterItem)
-        }
-
-        override fun hashCode(): Int {
-            return clusterItem.hashCode()
-        }
-
-        override fun equals(other: Any?): Boolean {
-            return (other as? QuadItem<*>)?.clusterItem?.equals(clusterItem) ?: false
         }
     }
 
