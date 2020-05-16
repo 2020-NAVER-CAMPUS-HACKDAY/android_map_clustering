@@ -24,6 +24,7 @@ object PlaceDataProvider {
             object : OnDataLoadedCallback<PlaceList> {
                 override fun onDataReady(data: PlaceList) {
                     success(data)
+                    placeList = data
                     isDataReady = true
                 }
 
