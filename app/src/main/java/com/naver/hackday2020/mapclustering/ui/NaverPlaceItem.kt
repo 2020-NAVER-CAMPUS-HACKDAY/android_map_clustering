@@ -1,6 +1,5 @@
 package com.naver.hackday2020.mapclustering.ui
 
-import android.util.Log
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.hackday2020.mapclustering.model.PlaceList
@@ -10,7 +9,7 @@ import com.naver.maps.map.overlay.Marker
 class NaverPlaceItem(
     val place: Place
 ) : ClusterItem {
-    val marker: Marker
+    val marker: Marker = Marker(getPosition())
 
     companion object {
         private val tag = NaverPlaceItem::class.java.name
@@ -31,12 +30,5 @@ class NaverPlaceItem(
 
     fun setVisibility(isVisible: Boolean) {
         marker.isVisible = isVisible
-    }
-
-    init {
-        marker = Marker(getPosition())
-        setOnClickListener {
-            Log.d(tag, "marker clicked position - x : ${place.x}, y : ${place.y}")
-        }
     }
 }
