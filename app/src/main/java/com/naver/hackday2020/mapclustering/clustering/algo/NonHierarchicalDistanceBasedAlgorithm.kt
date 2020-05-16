@@ -33,7 +33,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
     /**
      * Any modifications should be synchronized on quadTree.
      */
-    private val quadTree = PointQuadTree<QuadItem<T>>(0.0, 1.0, 0.0, 1.0)
+    private val quadTree = PointQuadTree<QuadItem<T>>(quadTreeBounds)
 
     override var maxDistanceBetweenClusteredItems = DEFAULT_MAX_DISTANCE_AT_ZOOM
 
@@ -170,7 +170,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
             }
         }
         // 결과 확인용 테스트 로그
-        Log.d(tag, "results = $results")
+        Log.d(TAG, "results = $results")
         return results
     }
 
@@ -195,14 +195,16 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
             get() = 1
 
         init {
-            point = PROJECTION.toPoint(position)
+            point = projection.toPoint(position)
             items = setOf(clusterItem)
         }
     }
 
     companion object {
+        private const val TAG = "Algorithm" // 테스트 로그용 tag
         private const val DEFAULT_MAX_DISTANCE_AT_ZOOM = 100 // essentially 100 dp.
-        private val PROJECTION = SphericalMercatorProjection(1.0)
-        private const val tag = "Algorithm" // 테스트 로그용 tag
+
+        private val projection = SphericalMercatorProjection(1.0)
+        private val quadTreeBounds = Bounds(0.0, 1.0, 0.0, 1.0)
     }
 }
