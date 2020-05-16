@@ -3,6 +3,7 @@
     package="com.naver.hackday2020.mapclustering">
 
     <application
+        android:name=".MapApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
