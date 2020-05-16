@@ -211,11 +211,11 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
                 quad.search(searchBounds, results)
             }
         } else if (items != null) {
-            if (searchBounds.contains(bounds)) {
+            if (bounds in searchBounds) {
                 results.addAll(items!!)
             } else {
                 for (item in items!!) {
-                    if (searchBounds.contains(item.point)) {
+                    if (item.point in searchBounds) {
                         results.add(item)
                     }
                 }
