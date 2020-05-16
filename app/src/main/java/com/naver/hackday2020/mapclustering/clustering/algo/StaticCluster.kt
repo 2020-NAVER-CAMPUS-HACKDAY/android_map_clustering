@@ -24,32 +24,32 @@ import com.naver.maps.geometry.LatLng
  * A cluster whose center is determined upon creation.
  */
 class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T> {
-    private val mItems = ArrayList<T>()
+    private val itemList = ArrayList<T>()
 
     override val items: Collection<T>
-        get() = mItems
+        get() = itemList
 
     override val size: Int
-        get() = mItems.size
+        get() = itemList.size
 
-    fun add(t: T) = mItems.add(t)
+    fun add(t: T) = itemList.add(t)
 
-    fun remove(t: T) = mItems.remove(t)
+    fun remove(t: T) = itemList.remove(t)
 
     override fun toString(): String {
         return "StaticCluster{" +
                 "mCenter=" + position +
-                ", mItems.size=" + mItems.size +
+                ", itemList.size=" + itemList.size +
                 '}'.toString()
     }
 
     override fun hashCode(): Int {
-        return position.hashCode() + mItems.hashCode()
+        return position.hashCode() + itemList.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
         return if (other !is StaticCluster<*>) {
             false
-        } else other.position == position && other.mItems == mItems
+        } else other.position == position && other.itemList == itemList
     }
 }

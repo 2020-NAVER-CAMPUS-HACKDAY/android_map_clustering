@@ -25,18 +25,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
  */
 class PreCachingAlgorithmDecorator<T : ClusterItem>(
-    private val mAlgorithm: Algorithm<T>
+    private val algorithm: Algorithm<T>
 ) : BaseAlgorithm<T>() {
-    private val mCache = LruCache<Int, Set<Cluster<T>>>(5)
-    private val mCacheLock = ReentrantReadWriteLock()
+    private val cache = LruCache<Int, Set<Cluster<T>>>(5)
+    private val cacheLock = ReentrantReadWriteLock()
 
     override val items: Collection<T>
-        get() = mAlgorithm.items
+        get() = algorithm.items
 
     override var maxDistanceBetweenClusteredItems: Int
-        get() = mAlgorithm.maxDistanceBetweenClusteredItems
+        get() = algorithm.maxDistanceBetweenClusteredItems
         set(maxDistance) {
-            mAlgorithm.maxDistanceBetweenClusteredItems = maxDistance
+            algorithm.maxDistanceBetweenClusteredItems = maxDistance
             clearCache()
         }
 
@@ -49,36 +49,36 @@ class PreCachingAlgorithmDecorator<T : ClusterItem>(
     }
 
     override fun addItem(item: T): Boolean =
-        clearCacheInternal { mAlgorithm.addItem(item) }
+        clearCacheInternal { algorithm.addItem(item) }
 
     override fun addItems(items: Collection<T>): Boolean =
-        clearCacheInternal { mAlgorithm.addItems(items) }
+        clearCacheInternal { algorithm.addItems(items) }
 
     override fun removeItem(item: T): Boolean =
-        clearCacheInternal { mAlgorithm.removeItem(item) }
+        clearCacheInternal { algorithm.removeItem(item) }
 
     override fun removeItems(items: Collection<T>): Boolean =
-        clearCacheInternal { mAlgorithm.removeItems(items) }
+        clearCacheInternal { algorithm.removeItems(items) }
 
     override fun updateItem(item: T): Boolean =
-        clearCacheInternal { mAlgorithm.updateItem(item) }
+        clearCacheInternal { algorithm.updateItem(item) }
 
     override fun clearItems() {
-        mAlgorithm.clearItems()
+        algorithm.clearItems()
         clearCache()
     }
 
     private fun clearCache() {
-        mCache.evictAll()
+        cache.evictAll()
     }
 
     override fun getClusters(zoom: Double): Set<Cluster<T>> {
         val discreteZoom = zoom.toInt()
         val results = getClustersInternal(discreteZoom)
-        if (mCache.get(discreteZoom + 1) == null) {
+        if (cache.get(discreteZoom + 1) == null) {
             Thread(PrecacheRunnable(discreteZoom + 1)).start()
         }
-        if (mCache.get(discreteZoom - 1) == null) {
+        if (cache.get(discreteZoom - 1) == null) {
             Thread(PrecacheRunnable(discreteZoom - 1)).start()
         }
         return results
@@ -86,24 +86,24 @@ class PreCachingAlgorithmDecorator<T : ClusterItem>(
 
     private fun getClustersInternal(discreteZoom: Int): Set<Cluster<T>> {
         var results: Set<Cluster<T>>?
-        mCacheLock.readLock().lock()
-        results = mCache.get(discreteZoom)
-        mCacheLock.readLock().unlock()
+        cacheLock.readLock().lock()
+        results = cache.get(discreteZoom)
+        cacheLock.readLock().unlock()
 
         // cache 되어 있지 않으면 cluster 계산
         if (results == null) {
-            mCacheLock.writeLock().lock()
-            results = mCache.get(discreteZoom)
+            cacheLock.writeLock().lock()
+            results = cache.get(discreteZoom)
             if (results == null) {
-                results = mAlgorithm.getClusters(discreteZoom.toDouble())
-                mCache.put(discreteZoom, results)
+                results = algorithm.getClusters(discreteZoom.toDouble())
+                cache.put(discreteZoom, results)
             }
-            mCacheLock.writeLock().unlock()
+            cacheLock.writeLock().unlock()
         }
         return results
     }
 
-    private inner class PrecacheRunnable(private val mZoom: Int) : Runnable {
+    private inner class PrecacheRunnable(private val zoom: Int) : Runnable {
 
         override fun run() {
             try {
@@ -113,7 +113,7 @@ class PreCachingAlgorithmDecorator<T : ClusterItem>(
                 // ignore. keep going.
             }
 
-            getClustersInternal(mZoom)
+            getClustersInternal(zoom)
         }
     }
 }

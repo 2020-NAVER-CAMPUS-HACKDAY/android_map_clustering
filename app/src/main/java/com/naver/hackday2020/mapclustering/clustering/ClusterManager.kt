@@ -14,15 +14,15 @@ class ClusterManager<T : ClusterItem>(
     private val map: NaverMap
 ) : NaverMap.OnCameraIdleListener {
 
-    private var mAlgorithm: ScreenBasedAlgorithm<T> = ScreenBasedAlgorithmAdapter(
+    private var clusterAlgorithm: ScreenBasedAlgorithm<T> = ScreenBasedAlgorithmAdapter(
         PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm())
     )
     private var previousCameraPosition: CameraPosition? = null
-    private val mClusterTaskLock = ReentrantReadWriteLock()
-    private var mClusterTask: ClusterTask = ClusterTask()
+    private val clusterTaskLock = ReentrantReadWriteLock()
+    private var clusterTask: ClusterTask = ClusterTask()
 
     var algorithm: Algorithm<T>?
-        get() = mAlgorithm
+        get() = clusterAlgorithm
         set(algorithm) = if (algorithm is ScreenBasedAlgorithm) {
             setAlgorithm(algorithm)
         } else {
@@ -36,52 +36,52 @@ class ClusterManager<T : ClusterItem>(
     private fun setAlgorithm(algorithm: ScreenBasedAlgorithm<T>) {
         algorithm.lock()
         try {
-            algorithm.addItems(mAlgorithm.items)
+            algorithm.addItems(clusterAlgorithm.items)
 
-            mAlgorithm = algorithm
+            clusterAlgorithm = algorithm
         } finally {
             algorithm.unlock()
         }
 
-        if (mAlgorithm.shouldReClusterOnMapMovement()) {
-            mAlgorithm.onCameraChange(map.cameraPosition)
+        if (clusterAlgorithm.shouldReClusterOnMapMovement()) {
+            clusterAlgorithm.onCameraChange(map.cameraPosition)
         }
 
         cluster()
     }
 
     private fun internalLockSafe(action: (() -> Unit)) {
-        mAlgorithm.lock()
+        clusterAlgorithm.lock()
         try {
             action.invoke()
         } catch (e: Exception) {
             Log.e(tag, "error = ${e.localizedMessage}")
         } finally {
-            mAlgorithm.unlock()
+            clusterAlgorithm.unlock()
         }
     }
 
     fun clearItems() {
         internalLockSafe {
-            mAlgorithm.clearItems()
+            clusterAlgorithm.clearItems()
         }
     }
 
     fun addItems(items: Collection<T>) {
         internalLockSafe {
-            mAlgorithm.addItems(items)
+            clusterAlgorithm.addItems(items)
         }
     }
 
     fun addItem(myItem: T) {
         internalLockSafe {
-            mAlgorithm.addItem(myItem)
+            clusterAlgorithm.addItem(myItem)
         }
     }
 
     fun removeItem(item: T) {
         internalLockSafe {
-            mAlgorithm.removeItem(item)
+            clusterAlgorithm.removeItem(item)
         }
     }
 
@@ -90,17 +90,17 @@ class ClusterManager<T : ClusterItem>(
      * or clearing item(s).
      */
     fun cluster() {
-        mClusterTaskLock.writeLock().lock()
+        clusterTaskLock.writeLock().lock()
         try {
             // Attempt to cancel the in-flight request.
-            mClusterTask.cancel(true)
-            mClusterTask = ClusterTask()
-            mClusterTask.executeOnExecutor(
+            clusterTask.cancel(true)
+            clusterTask = ClusterTask()
+            clusterTask.executeOnExecutor(
                 AsyncTask.THREAD_POOL_EXECUTOR,
                 map.cameraPosition.zoom
             )
         } finally {
-            mClusterTaskLock.writeLock().unlock()
+            clusterTaskLock.writeLock().unlock()
         }
     }
 
@@ -108,10 +108,10 @@ class ClusterManager<T : ClusterItem>(
      * Might re-cluster.
      */
     override fun onCameraIdle() {
-        mAlgorithm.onCameraChange(map.cameraPosition)
+        clusterAlgorithm.onCameraChange(map.cameraPosition)
 
         // delegate clustering to the algorithm
-        if (mAlgorithm.shouldReClusterOnMapMovement()) {
+        if (clusterAlgorithm.shouldReClusterOnMapMovement()) {
             cluster()
 
             // Don't re-compute clusters if the map has just been panned/tilted/rotated.
@@ -129,11 +129,11 @@ class ClusterManager<T : ClusterItem>(
      */
     private inner class ClusterTask : AsyncTask<Double, Void, Set<Cluster<T>>>() {
         override fun doInBackground(vararg zoom: Double?): Set<Cluster<T>> {
-            mAlgorithm.lock()
+            clusterAlgorithm.lock()
             try {
-                return mAlgorithm.getClusters(zoom[0]!!)
+                return clusterAlgorithm.getClusters(zoom[0]!!)
             } finally {
-                mAlgorithm.unlock()
+                clusterAlgorithm.unlock()
             }
         }
 

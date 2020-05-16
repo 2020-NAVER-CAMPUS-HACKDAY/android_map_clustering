@@ -26,23 +26,23 @@ import kotlin.math.pow
 class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>() {
 
     /**
-     * Any modifications should be synchronized on mQuadTree.
+     * Any modifications should be synchronized on quadTree.
      */
-    private val mItems = HashSet<QuadItem<T>>()
+    private val quadItems = HashSet<QuadItem<T>>()
 
     /**
-     * Any modifications should be synchronized on mQuadTree.
+     * Any modifications should be synchronized on quadTree.
      */
-    private val mQuadTree = PointQuadTree<QuadItem<T>>(0.0, 1.0, 0.0, 1.0)
+    private val quadTree = PointQuadTree<QuadItem<T>>(0.0, 1.0, 0.0, 1.0)
 
     override var maxDistanceBetweenClusteredItems = DEFAULT_MAX_DISTANCE_AT_ZOOM
 
     override val items: Collection<T>
         get() {
             val items = ArrayList<T>()
-            synchronized(mQuadTree) {
-                for (quadItem in mItems) {
-                    items.add(quadItem.mClusterItem)
+            synchronized(quadTree) {
+                for (quadItem in quadItems) {
+                    items.add(quadItem.clusterItem)
                 }
             }
             return items
@@ -51,10 +51,10 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
     override fun addItem(item: T): Boolean {
         var result: Boolean
         val quadItem = QuadItem(item)
-        synchronized(mQuadTree) {
-            result = mItems.add(quadItem)
+        synchronized(quadTree) {
+            result = quadItems.add(quadItem)
             if (result) {
-                mQuadTree.add(quadItem)
+                quadTree.add(quadItem)
             }
         }
         return result
@@ -72,9 +72,9 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
     }
 
     override fun clearItems() {
-        synchronized(mQuadTree) {
-            mItems.clear()
-            mQuadTree.clear()
+        synchronized(quadTree) {
+            quadItems.clear()
+            quadTree.clear()
         }
     }
 
@@ -83,10 +83,10 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         // QuadItem delegates hashcode() and equals() to its item so,
         //   removing any QuadItem to that item will remove the item
         val quadItem = QuadItem(item)
-        synchronized(mQuadTree) {
-            result = mItems.remove(quadItem)
+        synchronized(quadTree) {
+            result = quadItems.remove(quadItem)
             if (result) {
-                mQuadTree.remove(quadItem)
+                quadTree.remove(quadItem)
             }
         }
         return result
@@ -94,14 +94,14 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
 
     override fun removeItems(items: Collection<T>): Boolean {
         var result = false
-        synchronized(mQuadTree) {
+        synchronized(quadTree) {
             for (item in items) {
                 // QuadItem delegates hashcode() and equals() to its item so,
                 //   removing any QuadItem to that item will remove the item
                 val quadItem = QuadItem(item)
-                val individualResult = mItems.remove(quadItem)
+                val individualResult = quadItems.remove(quadItem)
                 if (individualResult) {
-                    mQuadTree.remove(quadItem)
+                    quadTree.remove(quadItem)
                     result = true
                 }
             }
@@ -111,7 +111,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
 
     override fun updateItem(item: T): Boolean {
         var result: Boolean
-        synchronized(mQuadTree) {
+        synchronized(quadTree) {
             result = removeItem(item)
             if (result) {
                 // Only add the item if it was removed (to help prevent accidental duplicates on map)
@@ -131,8 +131,8 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         val distanceToCluster = HashMap<QuadItem<T>, Double>()
         val itemToCluster = HashMap<QuadItem<T>, StaticCluster<T>>()
 
-        synchronized(mQuadTree) {
-            for (candidate in mItems) {
+        synchronized(quadTree) {
+            for (candidate in quadItems) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue
@@ -140,7 +140,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
 
                 val searchBounds = createBoundsFromSpan(candidate.point, zoomSpecificSpan)
                 val clusterItems: Collection<QuadItem<T>>
-                clusterItems = mQuadTree.search(searchBounds)
+                clusterItems = quadTree.search(searchBounds)
                 if (clusterItems.size == 1) {
                     // Only the current marker is in range. Just add the single item to the results.
                     results.add(candidate)
@@ -148,7 +148,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                     distanceToCluster[candidate] = 0.0
                     continue
                 }
-                val cluster = StaticCluster<T>(candidate.mClusterItem.getPosition())
+                val cluster = StaticCluster<T>(candidate.clusterItem.getPosition())
                 results.add(cluster)
 
                 for (clusterItem in clusterItems) {
@@ -160,10 +160,10 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                             continue
                         }
                         // Move item to the closer cluster.
-                        itemToCluster[clusterItem]!!.remove(clusterItem.mClusterItem)
+                        itemToCluster[clusterItem]!!.remove(clusterItem.clusterItem)
                     }
                     distanceToCluster[clusterItem] = distance
-                    cluster.add(clusterItem.mClusterItem)
+                    cluster.add(clusterItem.clusterItem)
                     itemToCluster[clusterItem] = cluster
                 }
                 visitedCandidates.addAll(clusterItems)
@@ -186,9 +186,9 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         )
     }
 
-    class QuadItem<T : ClusterItem>(val mClusterItem: T) : PointQuadTree.Item, Cluster<T> {
+    class QuadItem<T : ClusterItem>(val clusterItem: T) : PointQuadTree.Item, Cluster<T> {
         override val point: Point
-        override val position: LatLng = mClusterItem.getPosition()
+        override val position: LatLng = clusterItem.getPosition()
         override val items: Set<T>
 
         override val size
@@ -196,15 +196,15 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
 
         init {
             point = PROJECTION.toPoint(position)
-            items = setOf(mClusterItem)
+            items = setOf(clusterItem)
         }
 
         override fun hashCode(): Int {
-            return mClusterItem.hashCode()
+            return clusterItem.hashCode()
         }
 
         override fun equals(other: Any?): Boolean {
-            return (other as? QuadItem<*>)?.mClusterItem?.equals(mClusterItem) ?: false
+            return (other as? QuadItem<*>)?.clusterItem?.equals(clusterItem) ?: false
         }
     }
 

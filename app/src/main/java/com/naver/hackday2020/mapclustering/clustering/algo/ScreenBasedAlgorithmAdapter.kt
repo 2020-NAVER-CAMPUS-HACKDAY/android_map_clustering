@@ -21,32 +21,32 @@ import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.maps.map.CameraPosition
 
 class ScreenBasedAlgorithmAdapter<T : ClusterItem>(
-    private val mAlgorithm: Algorithm<T>
+    private val algorithm: Algorithm<T>
 ) : BaseAlgorithm<T>(), ScreenBasedAlgorithm<T> {
     override val items: Collection<T>
-        get() = mAlgorithm.items
+        get() = algorithm.items
 
     override var maxDistanceBetweenClusteredItems: Int
-        get() = mAlgorithm.maxDistanceBetweenClusteredItems
+        get() = algorithm.maxDistanceBetweenClusteredItems
         set(maxDistance) {
-            mAlgorithm.maxDistanceBetweenClusteredItems = maxDistance
+            algorithm.maxDistanceBetweenClusteredItems = maxDistance
         }
 
     override fun shouldReClusterOnMapMovement() = false
 
-    override fun addItem(item: T) = mAlgorithm.addItem(item)
+    override fun addItem(item: T) = algorithm.addItem(item)
 
-    override fun addItems(items: Collection<T>) = mAlgorithm.addItems(items)
+    override fun addItems(items: Collection<T>) = algorithm.addItems(items)
 
-    override fun clearItems() = mAlgorithm.clearItems()
+    override fun clearItems() = algorithm.clearItems()
 
-    override fun removeItem(item: T) = mAlgorithm.removeItem(item)
+    override fun removeItem(item: T) = algorithm.removeItem(item)
 
-    override fun removeItems(items: Collection<T>) = mAlgorithm.removeItems(items)
+    override fun removeItems(items: Collection<T>) = algorithm.removeItems(items)
 
-    override fun updateItem(item: T) = mAlgorithm.updateItem(item)
+    override fun updateItem(item: T) = algorithm.updateItem(item)
 
-    override fun getClusters(zoom: Double): Set<Cluster<T>> = mAlgorithm.getClusters(zoom)
+    override fun getClusters(zoom: Double): Set<Cluster<T>> = algorithm.getClusters(zoom)
 
     override fun onCameraChange(cameraPosition: CameraPosition) {
         // stub

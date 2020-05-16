@@ -8,9 +8,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * Base Algorithm class that implements lock/unlock functionality.
  */
 abstract class BaseAlgorithm<T : ClusterItem> : Algorithm<T> {
-    private val mLock: ReadWriteLock = ReentrantReadWriteLock()
+    private val lock: ReadWriteLock = ReentrantReadWriteLock()
 
-    override fun lock() = mLock.writeLock().lock()
+    override fun lock() = lock.writeLock().lock()
 
-    override fun unlock() = mLock.writeLock().unlock()
+    override fun unlock() = lock.writeLock().unlock()
 }
