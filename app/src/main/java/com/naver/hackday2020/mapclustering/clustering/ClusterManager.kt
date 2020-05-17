@@ -3,6 +3,7 @@ package com.naver.hackday2020.mapclustering.clustering
 import android.os.AsyncTask
 import android.util.Log
 import com.naver.hackday2020.mapclustering.clustering.algo.*
+import com.naver.hackday2020.mapclustering.clustering.render.NaverMapClusterRenderer
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.NaverMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -12,7 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  */
 class ClusterManager<T : ClusterItem>(
     private val map: NaverMap
-) : ClickEvent<T>(), NaverMap.OnCameraIdleListener {
+) : NaverMap.OnCameraIdleListener {
 
     private var clusterAlgorithm: ScreenBasedAlgorithm<T> = ScreenBasedAlgorithmAdapter(
         PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm())
@@ -20,6 +21,7 @@ class ClusterManager<T : ClusterItem>(
     private var previousCameraPosition: CameraPosition? = null
     private val clusterTaskLock = ReentrantReadWriteLock()
     private var clusterTask: ClusterTask = ClusterTask()
+    private val naverMapRenderer = NaverMapClusterRenderer<T>(map)
 
     var algorithm: Algorithm<T>
         get() = clusterAlgorithm
@@ -104,6 +106,14 @@ class ClusterManager<T : ClusterItem>(
         }
     }
 
+    fun setOnClusterItemClickListener(onClick: (clusterItem: T) -> Unit) {
+        naverMapRenderer.setOnClusterItemClickListener(onClick)
+    }
+
+    fun setOnClusterClickListener(onClick: (cluster: Cluster<T>) -> Unit) {
+        naverMapRenderer.setOnClusterClickListener(onClick)
+    }
+
     /**
      * Might re-cluster.
      */
@@ -138,7 +148,7 @@ class ClusterManager<T : ClusterItem>(
         }
 
         override fun onPostExecute(clusters: Set<Cluster<T>>) {
-            // Renderer 으로 결과 clusters 전달
+            naverMapRenderer.changeClusters(clusters)
         }
     }
 

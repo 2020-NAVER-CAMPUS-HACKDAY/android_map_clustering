@@ -27,8 +27,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             success = { placeList ->
                 ClusterManager<NaverPlaceItem>(naverMap).run {
                     addItems(NaverPlaceItem.fromList(placeList))
-                    setOnClusterClickListener { onClusterClick(it) }
-                    setOnClusterItemClickListener { onClusterItemClick(it) }
+                    setOnClusterClickListener {
+                        onClusterClick(it)
+                    }
+                    setOnClusterItemClickListener {
+                        onClusterItemClick(it)
+                    }
                     cluster()
                 }
             },
