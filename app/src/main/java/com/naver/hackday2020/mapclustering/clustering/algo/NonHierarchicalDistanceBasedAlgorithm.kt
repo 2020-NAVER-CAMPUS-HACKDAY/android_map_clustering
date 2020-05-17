@@ -41,9 +41,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         get() {
             val items = ArrayList<T>()
             synchronized(quadTree) {
-                for (quadItem in quadItems) {
-                    items.add(quadItem.clusterItem)
-                }
+                quadItems.forEach{ items.add(it.clusterItem) }
             }
             return items
         }
