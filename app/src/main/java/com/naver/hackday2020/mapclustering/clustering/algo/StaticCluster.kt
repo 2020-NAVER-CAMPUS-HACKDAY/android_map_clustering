@@ -38,8 +38,8 @@ class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T>
 
     override fun toString(): String {
         return "StaticCluster{" +
-                "mCenter=" + position +
-                ", itemList.size=" + itemList.size +
+                "mCenter= $position" +
+                ", itemList.size=${itemList.size}" +
                 '}'.toString()
     }
 
