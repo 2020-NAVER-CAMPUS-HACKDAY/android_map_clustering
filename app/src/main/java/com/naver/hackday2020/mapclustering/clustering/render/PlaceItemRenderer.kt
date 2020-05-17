@@ -31,10 +31,10 @@ class PlaceItemRenderer<T : ClusterItem>(
     }
 
     override fun setOnPlaceItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit) {
+        onClickEvent = onClick
         for (item in items) {
             item.setOnClickListener(onClick)
         }
-        onClickEvent = onClick
     }
 
     override fun setOnClusterClickListener(onClick: (cluster: Cluster<T>) -> Unit) {

@@ -22,7 +22,6 @@ class ClusterRenderer<ITEM : ClusterItem>(
         for (marker in clusterMarkers) {
             marker.second.map = null
         }
-
         clusterMarkers.clear()
     }
 
@@ -38,13 +37,13 @@ class ClusterRenderer<ITEM : ClusterItem>(
     }
 
     override fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit) {
+        onClickEvent = onClick
         for (clusterMarker in clusterMarkers) {
             clusterMarker.second.setOnClickListener {
                 onClick(clusterMarker.first)
                 true
             }
         }
-        onClickEvent = onClick
     }
 
     private fun createClusterMarker(item: Cluster<ITEM>): Marker {

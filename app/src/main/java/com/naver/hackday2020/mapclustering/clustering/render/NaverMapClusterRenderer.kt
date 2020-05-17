@@ -5,7 +5,6 @@ import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.clustering.algo.StaticCluster
 import com.naver.maps.map.NaverMap
 
-@SuppressWarnings("unchecked")
 class NaverMapClusterRenderer<T : ClusterItem>(
     naverMap: NaverMap
 ) {
