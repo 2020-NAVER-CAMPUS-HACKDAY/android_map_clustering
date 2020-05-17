@@ -37,11 +37,11 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
     /**
      * The elements inside this quad, if any.
      */
-    private var items: MutableSet<T>? = null
+    private var items = mutableSetOf<T>()
     /**
      * Child quads.
      */
-    private var childrenQuads: MutableList<PointQuadTree<T>>? = null
+    private var childrenQuads = mutableListOf<PointQuadTree<T>>()
 
     /**
      * Creates a new quad tree with specified bounds.
@@ -68,29 +68,26 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
     }
 
     private fun insert(x: Double, y: Double, item: T) {
-        if (childrenQuads != null) {
+        if (childrenQuads.isNotEmpty()) {
             if (y < bounds.midY) {
                 if (x < bounds.midX) { // top left
-                    childrenQuads!![0].insert(x, y, item)
+                    childrenQuads[0].insert(x, y, item)
                 } else { // top right
-                    childrenQuads!![1].insert(x, y, item)
+                    childrenQuads[1].insert(x, y, item)
                 }
             } else {
                 if (x < bounds.midX) { // bottom left
-                    childrenQuads!![2].insert(x, y, item)
+                    childrenQuads[2].insert(x, y, item)
                 } else {
-                    childrenQuads!![3].insert(x, y, item)
+                    childrenQuads[3].insert(x, y, item)
                 }
             }
             return
         }
 
-        items = items ?: HashSet()
-        items?.let {
-            it.add(item)
-            if (it.size > MAX_ELEMENTS && depth < MAX_DEPTH) {
-                split()
-            }
+        items.add(item)
+        if (items.size > MAX_ELEMENTS && depth < MAX_DEPTH) {
+            split()
         }
 
     }
@@ -100,35 +97,28 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
      */
     private fun split() {
 
-        childrenQuads = ArrayList(4)
-        childrenQuads!!.add(
+        childrenQuads = arrayListOf(
             PointQuadTree(
                 bounds.minX,
                 bounds.midX,
                 bounds.minY,
                 bounds.midY,
                 depth + 1
-            )
-        )
-        childrenQuads!!.add(
+            ),
             PointQuadTree(
                 bounds.midX,
                 bounds.maxX,
                 bounds.minY,
                 bounds.midY,
                 depth + 1
-            )
-        )
-        childrenQuads!!.add(
+            ),
             PointQuadTree(
                 bounds.minX,
                 bounds.midX,
                 bounds.midY,
                 bounds.maxY,
                 depth + 1
-            )
-        )
-        childrenQuads!!.add(
+            ),
             PointQuadTree(
                 bounds.midX,
                 bounds.maxX,
@@ -137,12 +127,11 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
                 depth + 1
             )
         )
-        items?.let {
-            for (item in it) {
-                insert(item.point.x, item.point.y, item)
-            }
+
+        if (items.isNotEmpty()) {
+            items.forEach{ item -> insert(item.point.x, item.point.y, item) }
         }
-        items = null
+        items.clear()
     }
 
     /**
@@ -161,35 +150,31 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
 
     private fun remove(x: Double, y: Double, item: T): Boolean {
 
-        return if (this.childrenQuads != null) {
-            if (y < bounds.midY) {
+        if (childrenQuads.isNotEmpty()) {
+            return if (y < bounds.midY) {
                 if (x < bounds.midX) { // top left
-                    childrenQuads!![0].remove(x, y, item)
+                    childrenQuads[0].remove(x, y, item)
                 } else { // top right
-                    childrenQuads!![1].remove(x, y, item)
+                    childrenQuads[1].remove(x, y, item)
                 }
             } else {
                 if (x < bounds.midX) { // bottom left
-                    childrenQuads!![2].remove(x, y, item)
+                    childrenQuads[2].remove(x, y, item)
                 } else {
-                    childrenQuads!![3].remove(x, y, item)
+                    childrenQuads[3].remove(x, y, item)
                 }
             }
-        } else {
-            if (items == null) {
-                false
-            } else {
-                items!!.remove(item)
-            }
         }
+
+        return items.remove(item)
     }
 
     /**
      * Removes all points from the quadTree
      */
     fun clear() {
-        childrenQuads = null
-        items?.clear()
+        childrenQuads.clear()
+        items.clear()
     }
 
     /**
@@ -206,18 +191,17 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
             return
         }
 
-        if (this.childrenQuads != null) {
-            for (quad in childrenQuads!!) {
-                quad.search(searchBounds, results)
-            }
-        } else if (items != null) {
-            if (bounds in searchBounds) {
-                results.addAll(items!!)
-            } else {
-                for (item in items!!) {
-                    if (item.point in searchBounds) {
-                        results.add(item)
-                    }
+        if (childrenQuads.isNotEmpty()) {
+            childrenQuads.forEach { quad -> quad.search(searchBounds, results) }
+            return
+        }
+
+        if (bounds in searchBounds) {
+            results.addAll(items)
+        } else {
+            items.forEach { item ->
+                if (item.point in searchBounds) {
+                    results.add(item)
                 }
             }
         }
