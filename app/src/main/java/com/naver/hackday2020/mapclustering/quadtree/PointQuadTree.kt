@@ -97,36 +97,28 @@ class PointQuadTree<T : PointQuadTree.Item> private constructor(
      */
     private fun split() {
 
-        childrenQuads = ArrayList(4)
-
-        childrenQuads.add(
+        childrenQuads = arrayListOf(
             PointQuadTree(
                 bounds.minX,
                 bounds.midX,
                 bounds.minY,
                 bounds.midY,
                 depth + 1
-            )
-        )
-        childrenQuads.add(
+            ),
             PointQuadTree(
                 bounds.midX,
                 bounds.maxX,
                 bounds.minY,
                 bounds.midY,
                 depth + 1
-            )
-        )
-        childrenQuads.add(
+            ),
             PointQuadTree(
                 bounds.minX,
                 bounds.midX,
                 bounds.midY,
                 bounds.maxY,
                 depth + 1
-            )
-        )
-        childrenQuads.add(
+            ),
             PointQuadTree(
                 bounds.midX,
                 bounds.maxX,
