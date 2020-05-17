@@ -5,13 +5,11 @@ import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.clustering.algo.StaticCluster
 import com.naver.maps.map.NaverMap
 
-class NaverMapClusterRenderer<T : ClusterItem>(
-    naverMap: NaverMap
-) {
-    private val clusterItemRenderer = PlaceItemRenderer<T>(naverMap)
-    private val clusterRenderer = ClusterRenderer<T>(naverMap)
+class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
+    private val clusterItemRenderer = PlaceItemRenderer<ITEM>(naverMap)
+    private val clusterRenderer = ClusterRenderer<ITEM>(naverMap)
 
-    fun changeClusters(newClusters: Set<Cluster<T>>) {
+    fun changeClusters(newClusters: Set<Cluster<ITEM>>) {
         clear()
         clusterItemRenderer.update(getPlaceItems(newClusters))
         clusterRenderer.update(getStaticClusters(newClusters))
@@ -23,26 +21,26 @@ class NaverMapClusterRenderer<T : ClusterItem>(
         clusterRenderer.clear()
     }
 
-    fun setUpMarkers() {
+    fun setOnClusterItemClickListener(onClick: (clusterItem: ITEM) -> Unit) {
+        clusterItemRenderer.setOnPlaceItemClickListener {
+            (it as? ITEM)?.run { onClick(this) }
+        }
+    }
+
+    fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit) {
+        clusterRenderer.setOnClusterClickListener(onClick)
+    }
+
+    private fun setUpMarkers() {
         clusterItemRenderer.setUpMarkers()
         clusterRenderer.setUpMarkers()
     }
 
-    fun setOnClusterItemClickListener(onClick: (clusterItem: T) -> Unit) {
-        clusterItemRenderer.setOnPlaceItemClickListener {
-            (it as? T)?.run { onClick(this) }
-        }
-    }
-
-    fun setOnClusterClickListener(onClick: (cluster: Cluster<T>) -> Unit) {
-        clusterRenderer.setOnClusterClickListener(onClick)
-    }
-
-    private fun getPlaceItems(clusters: Set<Cluster<T>>) = clusters.filter {
+    private fun getPlaceItems(clusters: Set<Cluster<ITEM>>) = clusters.filter {
         (it as? StaticCluster<*>) != null && it.isPlaceItem()
     }
 
-    private fun getStaticClusters(clusters: Set<Cluster<T>>) = clusters.filter {
+    private fun getStaticClusters(clusters: Set<Cluster<ITEM>>) = clusters.filter {
         (it as? StaticCluster<*>) != null && it.isCluster()
     }
 }

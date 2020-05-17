@@ -4,13 +4,13 @@ import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.maps.map.NaverMap
 
-class PlaceItemRenderer<T : ClusterItem>(
+class PlaceItemRenderer<ITEM : ClusterItem>(
     private val naverMap: NaverMap
-) : Renderer<T> {
-    private val items = arrayListOf<T>()
+) : Renderer<ITEM> {
+    private val items = arrayListOf<ITEM>()
     private var onClickEvent: (clusterItem: ClusterItem) -> Unit = { }
 
-    override fun update(newClusters: List<Cluster<T>>) {
+    override fun update(newClusters: List<Cluster<ITEM>>) {
         for (newCluster in newClusters) {
             items.addAll(newCluster.items)
         }
@@ -37,7 +37,7 @@ class PlaceItemRenderer<T : ClusterItem>(
         }
     }
 
-    override fun setOnClusterClickListener(onClick: (cluster: Cluster<T>) -> Unit) {
+    override fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit) {
         // do nothing
     }
 }

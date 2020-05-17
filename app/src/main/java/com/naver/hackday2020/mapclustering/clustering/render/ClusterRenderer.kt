@@ -14,7 +14,7 @@ class ClusterRenderer<ITEM : ClusterItem>(
     private var onClickEvent: (cluster: Cluster<ITEM>) -> Unit = { }
 
     override fun update(newClusters: List<Cluster<ITEM>>) {
-        val newClusterMarkers = newClusters.map { Pair(it, createClusterMarker(it)) }
+        val newClusterMarkers = newClusters.map { Pair(it, createCluster(it)) }
         clusterMarkers.addAll(newClusterMarkers)
     }
 
@@ -46,7 +46,7 @@ class ClusterRenderer<ITEM : ClusterItem>(
         }
     }
 
-    private fun createClusterMarker(item: Cluster<ITEM>): Marker {
+    private fun createCluster(item: Cluster<ITEM>): Marker {
         val markerView = ClusterOverlayView.create(item.size)
         return Marker(item.position, OverlayImage.fromView(markerView))
     }
