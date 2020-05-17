@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
 import com.naver.hackday2020.mapclustering.ext.showSnack
-import com.naver.hackday2020.mapclustering.ext.showToast
 import com.naver.hackday2020.mapclustering.model.PlaceDataProvider
 import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
+import com.naver.hackday2020.mapclustering.util.ToastUtil
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -39,12 +39,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun onClusterClick(cluster: Cluster<NaverPlaceItem>): Boolean {
-        layout_map.showToast("cluster items = ${cluster.size}")
+        ToastUtil.showToast("cluster items = ${cluster.size}")
         return true
     }
 
     private fun onClusterItemClick(clusterItem: NaverPlaceItem): Boolean {
-        layout_map.showToast("place name = ${clusterItem.place.name}")
+        ToastUtil.showToast("place name = ${clusterItem.place.name}")
         return true
     }
 }
