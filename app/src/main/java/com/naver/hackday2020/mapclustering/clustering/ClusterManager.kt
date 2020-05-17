@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  */
 class ClusterManager<T : ClusterItem>(
     private val map: NaverMap
-) : NaverMap.OnCameraIdleListener {
+) : ClickEvent<T>(), NaverMap.OnCameraIdleListener {
 
     private var clusterAlgorithm: ScreenBasedAlgorithm<T> = ScreenBasedAlgorithmAdapter(
         PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm())
