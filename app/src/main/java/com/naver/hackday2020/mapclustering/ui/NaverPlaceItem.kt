@@ -4,6 +4,7 @@ import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.hackday2020.mapclustering.model.PlaceList
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 
 class NaverPlaceItem(
@@ -21,14 +22,18 @@ class NaverPlaceItem(
 
     override fun getPosition() = LatLng(place.y, place.x)
 
-    fun setOnClickListener(onClick: (item: NaverPlaceItem) -> Unit) {
-        marker.setOnClickListener {
-            onClick(this)
-            true
-        }
+    override fun show(naverMap: NaverMap) {
+        marker.map = naverMap
     }
 
-    fun setVisibility(isVisible: Boolean) {
-        marker.isVisible = isVisible
+    override fun hide() {
+        marker.map = null
+    }
+
+    override fun setOnClickListener(onClick: (item: ClusterItem) -> Unit) {
+        marker.setOnClickListener {
+            onClick(this as ClusterItem)
+            true
+        }
     }
 }
