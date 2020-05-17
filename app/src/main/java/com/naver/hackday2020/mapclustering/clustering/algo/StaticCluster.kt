@@ -36,6 +36,10 @@ class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T>
 
     fun remove(t: T) = itemList.remove(t)
 
+    fun isCluster() = size > 1
+
+    fun isPlaceItem() = size == 1
+
     override fun toString(): String {
         return "StaticCluster{" +
                 "mCenter= $position" +
