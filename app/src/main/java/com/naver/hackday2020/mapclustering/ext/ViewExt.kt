@@ -1,6 +1,7 @@
 package com.naver.hackday2020.mapclustering.ext
 
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -25,4 +26,11 @@ fun View.showSnack(
         setAction(context.getString(R.string.ok)) { dismiss() }
         show()
     }
+}
+
+fun View.showToast(
+    message: String,
+    length: Int = Toast.LENGTH_LONG
+) {
+    Toast.makeText(this.context, message, length).show()
 }
