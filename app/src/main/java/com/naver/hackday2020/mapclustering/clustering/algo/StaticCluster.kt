@@ -40,7 +40,7 @@ class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T>
         return "StaticCluster{" +
                 "mCenter= $position" +
                 ", itemList.size=${itemList.size}" +
-                '}'.toString()
+                '}'
     }
 
     override fun hashCode(): Int {
