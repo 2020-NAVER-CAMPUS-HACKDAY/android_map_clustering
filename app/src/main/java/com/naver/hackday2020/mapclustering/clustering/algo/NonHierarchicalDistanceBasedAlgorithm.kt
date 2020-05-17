@@ -125,7 +125,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         val zoomSpecificSpan = maxDistanceBetweenClusteredItems.toDouble() / 2.0.pow(discreteZoom.toDouble()) / 256.0
 
         val visitedCandidates = HashSet<QuadItem<T>>()
-        val results = HashSet<Cluster<T>>()
+        val results = HashSet<StaticCluster<T>>()
         val distanceToCluster = HashMap<QuadItem<T>, Double>()
         val itemToCluster = HashMap<QuadItem<T>, StaticCluster<T>>()
 
@@ -136,17 +136,19 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                     continue
                 }
 
+                val cluster = StaticCluster<T>(candidate.clusterItem.getPosition())
                 val searchBounds = createBoundsFromSpan(candidate.point, zoomSpecificSpan)
                 val clusterItems: Collection<QuadItem<T>>
                 clusterItems = quadTree.search(searchBounds)
                 if (clusterItems.size == 1) {
                     // Only the current marker is in range. Just add the single item to the results.
-                    results.add(candidate)
+                    cluster.add(candidate.clusterItem)
+                    results.add(cluster)
                     visitedCandidates.add(candidate)
                     distanceToCluster[candidate] = 0.0
                     continue
                 }
-                val cluster = StaticCluster<T>(candidate.clusterItem.getPosition())
+
                 results.add(cluster)
 
                 for (clusterItem in clusterItems) {
@@ -184,13 +186,10 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         )
     }
 
-    data class QuadItem<T : ClusterItem>(val clusterItem: T) : PointQuadTree.Item, Cluster<T> {
+    data class QuadItem<T : ClusterItem>(val clusterItem: T) : PointQuadTree.Item {
         override val point: Point
-        override val position: LatLng = clusterItem.getPosition()
-        override val items: Set<T>
-
-        override val size
-            get() = 1
+        private val position: LatLng = clusterItem.getPosition()
+        private val items: Set<T>
 
         init {
             point = projection.toPoint(position)
