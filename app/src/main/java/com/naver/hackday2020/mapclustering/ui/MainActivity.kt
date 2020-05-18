@@ -1,16 +1,16 @@
-package com.naver.hackday2020.mapclustering
+package com.naver.hackday2020.mapclustering.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.naver.hackday2020.mapclustering.R
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
 import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.model.PlaceDataProvider
-import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,7 +23,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_main
+        )
 
         (map as MapFragment).getMapAsync(this)
         sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
