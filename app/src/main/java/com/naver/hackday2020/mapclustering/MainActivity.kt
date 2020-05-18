@@ -11,7 +11,7 @@ import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.model.PlaceDataProvider
 import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
-import com.naver.hackday2020.mapclustering.util.ToastUtil
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
+    private lateinit var naverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
         PlaceDataProvider.getAllData(
             success = { placeList ->
                 ClusterManager<NaverPlaceItem>(naverMap).run {
@@ -45,12 +48,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun onClusterClick(cluster: Cluster<NaverPlaceItem>) {
-        ToastUtil.showToast("cluster items = ${cluster.size}")
+        moveCameraTo(cluster.position)
     }
 
     private fun onClusterItemClick(clusterItem: NaverPlaceItem) {
         binding.place = clusterItem.place
+        moveCameraTo(clusterItem.getPosition())
         showBottomSheet()
+    }
+
+    private fun moveCameraTo(position: LatLng) {
+        val cameraUpdate = CameraUpdate.scrollTo(position)
+            .animate(CameraAnimation.Easing)
+        naverMap.moveCamera(cameraUpdate)
     }
 
     private fun showBottomSheet() {
