@@ -49,21 +49,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun onClusterClick(cluster: Cluster<NaverPlaceItem>) {
         moveCameraTo(cluster.position)
+
+        // hide bottom sheet
+        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun onClusterItemClick(clusterItem: NaverPlaceItem) {
         binding.place = clusterItem.place
         moveCameraTo(clusterItem.getPosition())
-        showBottomSheet()
+
+        // show bottom sheet
+        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun moveCameraTo(position: LatLng) {
         val cameraUpdate = CameraUpdate.scrollTo(position)
             .animate(CameraAnimation.Easing)
         naverMap.moveCamera(cameraUpdate)
-    }
-
-    private fun showBottomSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
