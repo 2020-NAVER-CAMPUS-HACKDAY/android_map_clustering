@@ -10,7 +10,7 @@ interface Cluster<T : ClusterItem> {
     val items: Collection<T>
     val size: Int
 
-    fun isCluster(): Boolean
+    fun isCluster(minClusterSize: Int): Boolean
 
-    fun isClusterItem(): Boolean
+    fun isClusterItem(minClusterSize: Int): Boolean
 }
