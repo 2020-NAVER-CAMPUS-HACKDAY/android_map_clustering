@@ -2,7 +2,6 @@ package com.naver.hackday2020.mapclustering.clustering.render
 
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
-import com.naver.hackday2020.mapclustering.clustering.algo.StaticCluster
 import com.naver.maps.map.NaverMap
 
 class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
@@ -37,10 +36,10 @@ class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
     }
 
     private fun getClusterItems(clusters: Set<Cluster<ITEM>>) = clusters.filter {
-        (it as? StaticCluster<*>) != null && it.isClusterItem()
+        it.isClusterItem()
     }
 
     private fun getStaticClusters(clusters: Set<Cluster<ITEM>>) = clusters.filter {
-        (it as? StaticCluster<*>) != null && it.isCluster()
+        it.isCluster()
     }
 }

@@ -11,9 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 /**
  * Groups many items on a map based on zoom level.
  */
-class ClusterManager<T : ClusterItem>(
-    private val map: NaverMap
-) : NaverMap.OnCameraIdleListener {
+class ClusterManager<T : ClusterItem>(private val map: NaverMap) : NaverMap.OnCameraIdleListener {
 
     private var clusterAlgorithm: ScreenBasedAlgorithm<T> = ScreenBasedAlgorithmAdapter(
         PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm())
