@@ -48,6 +48,6 @@ class NaverMapClusterRenderer<ITEM : ClusterItem>(
         clusters.filter { it.isCluster(minClusterSize) }.toSet()
 
     companion object {
-        private const val DEFAULT_MIN_CLUSTER_SIZE = 2
+        private const val DEFAULT_MIN_CLUSTER_SIZE = 4
     }
 }
