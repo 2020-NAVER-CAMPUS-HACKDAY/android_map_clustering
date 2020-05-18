@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorImage">#EAEAEA</color>
+    <color name="marker_color">#00c458</color>
 </resources>

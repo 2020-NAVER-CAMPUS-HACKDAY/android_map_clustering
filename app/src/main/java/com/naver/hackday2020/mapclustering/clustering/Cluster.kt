@@ -9,4 +9,8 @@ interface Cluster<T : ClusterItem> {
     val position: LatLng
     val items: Collection<T>
     val size: Int
+
+    fun isCluster(minClusterSize: Int): Boolean
+
+    fun isClusterItem(minClusterSize: Int): Boolean
 }

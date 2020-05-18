@@ -1,5 +1,6 @@
 package com.naver.hackday2020.mapclustering.ext
 
+import android.graphics.PointF
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
@@ -26,3 +27,5 @@ fun View.showSnack(
         show()
     }
 }
+
+fun View.getCenter() = PointF(x + width / 2f, y + height / 2)
