@@ -23,7 +23,10 @@ import com.naver.maps.geometry.LatLng
 /**
  * A cluster whose center is determined upon creation.
  */
-class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T> {
+class StaticCluster<T : ClusterItem>(
+    override val position: LatLng,
+    var minClusterSize: Int = 2
+) : Cluster<T> {
     private val itemList = ArrayList<T>()
 
     override val items: Collection<T>
@@ -31,8 +34,6 @@ class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T>
 
     override val size: Int
         get() = itemList.size
-
-    var minClusterSize: Int = 2
 
     fun add(t: T) = itemList.add(t)
 
