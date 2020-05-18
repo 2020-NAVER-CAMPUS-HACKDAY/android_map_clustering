@@ -105,7 +105,7 @@ class ClusterManager<T : ClusterItem>(private val map: NaverMap) : NaverMap.OnCa
     }
 
     fun setOnClusterItemClickListener(onClick: (clusterItem: T) -> Unit) {
-        naverMapRenderer.setOnClusterItemClickListener(onClick)
+        naverMapRenderer.setOnClusterItemClickListener { (it as? T)?.run(onClick) }
     }
 
     fun setOnClusterClickListener(onClick: (cluster: Cluster<T>) -> Unit) {

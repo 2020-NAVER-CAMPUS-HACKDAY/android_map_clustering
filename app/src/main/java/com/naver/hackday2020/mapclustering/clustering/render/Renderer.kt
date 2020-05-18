@@ -5,7 +5,7 @@ import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 
 interface Renderer<ITEM : ClusterItem> {
 
-    fun update(newClusters: List<Cluster<ITEM>>)
+    fun update(newClusters: Set<Cluster<ITEM>>)
 
     fun clear()
 

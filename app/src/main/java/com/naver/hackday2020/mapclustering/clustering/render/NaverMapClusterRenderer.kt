@@ -4,42 +4,42 @@ import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.maps.map.NaverMap
 
-class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
+class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) : Renderer<ITEM> {
     private val clusterItemRenderer = ClusterItemRenderer<ITEM>(naverMap)
     private val clusterRenderer = ClusterRenderer<ITEM>(naverMap)
 
     fun changeClusters(newClusters: Set<Cluster<ITEM>>) {
         clear()
-        clusterItemRenderer.update(getClusterItems(newClusters))
-        clusterRenderer.update(getStaticClusters(newClusters))
+        update(newClusters)
         setUpMarkers()
     }
 
-    fun clear() {
+    override fun update(newClusters: Set<Cluster<ITEM>>) {
+        clusterItemRenderer.update(getClusterItems(newClusters))
+        clusterRenderer.update(getStaticClusters(newClusters))
+    }
+
+    override fun clear() {
         clusterItemRenderer.clear()
         clusterRenderer.clear()
     }
 
-    fun setOnClusterItemClickListener(onClick: (clusterItem: ITEM) -> Unit) {
-        clusterItemRenderer.setOnClusterItemClickListener {
-            (it as? ITEM)?.run { onClick(this) }
-        }
-    }
-
-    fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit) {
-        clusterRenderer.setOnClusterClickListener(onClick)
-    }
-
-    private fun setUpMarkers() {
+    override fun setUpMarkers() {
         clusterItemRenderer.setUpMarkers()
         clusterRenderer.setUpMarkers()
     }
 
-    private fun getClusterItems(clusters: Set<Cluster<ITEM>>) = clusters.filter {
-        it.isClusterItem()
+    override fun setOnClusterItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit) {
+        clusterItemRenderer.setOnClusterItemClickListener(onClick)
     }
 
-    private fun getStaticClusters(clusters: Set<Cluster<ITEM>>) = clusters.filter {
-        it.isCluster()
+    override fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit) {
+        clusterRenderer.setOnClusterClickListener(onClick)
     }
+
+    private fun getClusterItems(clusters: Set<Cluster<ITEM>>) =
+        clusters.filter { it.isClusterItem() }.toSet()
+
+    private fun getStaticClusters(clusters: Set<Cluster<ITEM>>) =
+        clusters.filter { it.isCluster() }.toSet()
 }

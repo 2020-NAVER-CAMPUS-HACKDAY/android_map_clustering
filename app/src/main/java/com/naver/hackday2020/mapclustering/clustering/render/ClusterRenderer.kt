@@ -13,7 +13,7 @@ class ClusterRenderer<ITEM : ClusterItem>(
     private val clusterMarkers = arrayListOf<Pair<Cluster<ITEM>, Marker>>()
     private var onClickEvent: (cluster: Cluster<ITEM>) -> Unit = { }
 
-    override fun update(newClusters: List<Cluster<ITEM>>) {
+    override fun update(newClusters: Set<Cluster<ITEM>>) {
         val newClusterMarkers = newClusters.map { Pair(it, createCluster(it)) }
         clusterMarkers.addAll(newClusterMarkers)
     }

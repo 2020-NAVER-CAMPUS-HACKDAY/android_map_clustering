@@ -10,7 +10,7 @@ class ClusterItemRenderer<ITEM : ClusterItem>(
     private val items = arrayListOf<ITEM>()
     private var onClickEvent: (clusterItem: ClusterItem) -> Unit = { }
 
-    override fun update(newClusters: List<Cluster<ITEM>>) {
+    override fun update(newClusters: Set<Cluster<ITEM>>) {
         for (newCluster in newClusters) {
             items.addAll(newCluster.items)
         }
