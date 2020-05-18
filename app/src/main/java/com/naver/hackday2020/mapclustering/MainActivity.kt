@@ -1,25 +1,31 @@
 package com.naver.hackday2020.mapclustering
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
+import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.model.PlaceDataProvider
 import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
 import com.naver.hackday2020.mapclustering.util.ToastUtil
-import com.naver.maps.map.MapFragment
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         (map as MapFragment).getMapAsync(this)
+        sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -38,13 +44,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    private fun onClusterClick(cluster: Cluster<NaverPlaceItem>): Boolean {
+    private fun onClusterClick(cluster: Cluster<NaverPlaceItem>) {
         ToastUtil.showToast("cluster items = ${cluster.size}")
-        return true
     }
 
-    private fun onClusterItemClick(clusterItem: NaverPlaceItem): Boolean {
-        ToastUtil.showToast("place name = ${clusterItem.place.name}")
-        return true
+    private fun onClusterItemClick(clusterItem: NaverPlaceItem) {
+        binding.place = clusterItem.place
+        showBottomSheet()
+    }
+
+    private fun showBottomSheet() {
+        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
