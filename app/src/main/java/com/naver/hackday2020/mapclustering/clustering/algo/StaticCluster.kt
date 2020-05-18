@@ -40,7 +40,7 @@ class StaticCluster<T : ClusterItem>(override val position: LatLng) : Cluster<T>
 
     fun isCluster() = size >= minClusterSize
 
-    fun isPlaceItem() = size < minClusterSize
+    fun isClusterItem() = size in 0 until minClusterSize
 
     override fun toString(): String {
         return "StaticCluster{" +

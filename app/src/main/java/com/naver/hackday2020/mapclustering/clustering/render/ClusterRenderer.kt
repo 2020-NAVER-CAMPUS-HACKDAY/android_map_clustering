@@ -32,7 +32,7 @@ class ClusterRenderer<ITEM : ClusterItem>(
         setOnClusterClickListener(onClickEvent)
     }
 
-    override fun setOnPlaceItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit) {
+    override fun setOnClusterItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit) {
         // do nothing
     }
 

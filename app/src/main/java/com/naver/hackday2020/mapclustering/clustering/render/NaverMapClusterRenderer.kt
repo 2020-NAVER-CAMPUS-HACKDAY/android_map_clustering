@@ -6,12 +6,12 @@ import com.naver.hackday2020.mapclustering.clustering.algo.StaticCluster
 import com.naver.maps.map.NaverMap
 
 class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
-    private val clusterItemRenderer = PlaceItemRenderer<ITEM>(naverMap)
+    private val clusterItemRenderer = ClusterItemRenderer<ITEM>(naverMap)
     private val clusterRenderer = ClusterRenderer<ITEM>(naverMap)
 
     fun changeClusters(newClusters: Set<Cluster<ITEM>>) {
         clear()
-        clusterItemRenderer.update(getPlaceItems(newClusters))
+        clusterItemRenderer.update(getClusterItems(newClusters))
         clusterRenderer.update(getStaticClusters(newClusters))
         setUpMarkers()
     }
@@ -22,7 +22,7 @@ class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
     }
 
     fun setOnClusterItemClickListener(onClick: (clusterItem: ITEM) -> Unit) {
-        clusterItemRenderer.setOnPlaceItemClickListener {
+        clusterItemRenderer.setOnClusterItemClickListener {
             (it as? ITEM)?.run { onClick(this) }
         }
     }
@@ -36,8 +36,8 @@ class NaverMapClusterRenderer<ITEM : ClusterItem>(naverMap: NaverMap) {
         clusterRenderer.setUpMarkers()
     }
 
-    private fun getPlaceItems(clusters: Set<Cluster<ITEM>>) = clusters.filter {
-        (it as? StaticCluster<*>) != null && it.isPlaceItem()
+    private fun getClusterItems(clusters: Set<Cluster<ITEM>>) = clusters.filter {
+        (it as? StaticCluster<*>) != null && it.isClusterItem()
     }
 
     private fun getStaticClusters(clusters: Set<Cluster<ITEM>>) = clusters.filter {

@@ -11,7 +11,7 @@ interface Renderer<ITEM : ClusterItem> {
 
     fun setUpMarkers()
 
-    fun setOnPlaceItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit)
+    fun setOnClusterItemClickListener(onClick: (clusterItem: ClusterItem) -> Unit)
 
     fun setOnClusterClickListener(onClick: (cluster: Cluster<ITEM>) -> Unit)
 }
