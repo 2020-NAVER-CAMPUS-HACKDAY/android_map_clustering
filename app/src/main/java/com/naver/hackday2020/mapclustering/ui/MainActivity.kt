@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.lifecycleOwner = this@MainActivity
 
         (map as MapFragment).getMapAsync(this)
-        fab.setOnClickListener { showNavView() }
+        binding.fab.setOnClickListener { showNavView() }
         subscribeUI()
 
         sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
     }
 
-    private fun showSnack() = drawer_layout.showSnack(R.string.loading_error_msg)
+    private fun showSnack() = binding.drawerLayout.showSnack(R.string.loading_error_msg)
 
-    private fun showNavView() = drawer_layout.openDrawer(nav_view)
-    private fun hideNavView() = drawer_layout.closeDrawer(nav_view)
+    private fun showNavView() = binding.drawerLayout.openDrawer(nav_view)
+    private fun hideNavView() = binding.drawerLayout.closeDrawer(nav_view)
 }
