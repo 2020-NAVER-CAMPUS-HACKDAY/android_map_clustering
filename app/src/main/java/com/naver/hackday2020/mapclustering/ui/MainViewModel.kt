@@ -66,11 +66,9 @@ class MainViewModel : ViewModel() {
         _currentCategory.value = categories[0]
 
         val categoryList = categoryMap
-                .toSortedMap()
                 .toList()
                 .sortedByDescending { (_, count) -> count }
                 .map { (category, number) -> "$category ($number)" }
-                .toList()
 
         categories.addAll(categoryList)
         return categories
