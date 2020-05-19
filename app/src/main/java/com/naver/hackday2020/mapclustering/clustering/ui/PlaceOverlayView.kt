@@ -14,14 +14,13 @@ class PlaceOverlayView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val binding = LayoutImageMarkerBinding.inflate(LayoutInflater.from(context))
-    private var markerType: MarkerType = MarkerType.RESTAURANT
+    var markerType: MarkerType = MarkerType.RESTAURANT
         set(value) {
             field = value
-            binding.ivPlaceType.apply {
-                setImageDrawable(markerType.getIconDrawable())
-            }
+            binding.ivPlaceType.setImageDrawable(markerType.getIconDrawable())
         }
+
+    private val binding = LayoutImageMarkerBinding.inflate(LayoutInflater.from(context))
 
     init {
         addView(binding.root)
