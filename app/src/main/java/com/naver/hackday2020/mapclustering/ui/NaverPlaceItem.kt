@@ -29,7 +29,6 @@ class NaverPlaceItem(
     }
 
     override fun hide() {
-        marker.isVisible = false
         marker.map = null
     }
 
