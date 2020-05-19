@@ -9,7 +9,7 @@ import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 import kotlinx.android.synthetic.main.item_category.view.*
 
 class CategoryRecyclerAdapter(
-    private var categories: List<String>
+    private val categories: List<String>
 ): RecyclerView.Adapter<CategoryRecyclerAdapter.CategoryViewHolder>() {
 
     private var onCategoryClick : OnItemClickListener<String> =
