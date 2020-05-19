@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.layout_category.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val viewModel by lazy {
+    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
