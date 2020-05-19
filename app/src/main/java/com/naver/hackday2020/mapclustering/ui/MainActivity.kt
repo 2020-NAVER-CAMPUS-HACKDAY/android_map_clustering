@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var naverMap: NaverMap
+    private lateinit var clusterManager: ClusterManager<NaverPlaceItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
+        clusterManager = ClusterManager(naverMap)
         viewModel.initData()
     }
 
@@ -57,8 +59,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startClustering(placeList: List<Place>) {
-        ClusterManager<NaverPlaceItem>(naverMap).run {
-            addItems(placeList.map { NaverPlaceItem.from(it) })
+        clusterManager.run {
+            updateItems(placeList.map { NaverPlaceItem.from(it) })
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
             cluster()

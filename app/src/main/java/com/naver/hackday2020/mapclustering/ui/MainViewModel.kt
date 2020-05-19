@@ -9,6 +9,8 @@ import com.naver.hackday2020.mapclustering.model.PlaceDataProvider
 import com.naver.hackday2020.mapclustering.util.StringUtil
 
 class MainViewModel : ViewModel() {
+    private var allPlaces = listOf<Place>()
+
     private val _placeList = MutableLiveData<List<Place>>()
     val placeList: LiveData<List<Place>> = _placeList
 
@@ -21,18 +23,31 @@ class MainViewModel : ViewModel() {
     private val _currentCategory = MutableLiveData<String>()
     val currentCategory: LiveData<String> = _currentCategory
 
-    fun changeCategory(category: String) {
-        _currentCategory.value = category
-    }
-
     fun initData() {
         initPlaceData()
         initCategoryData()
     }
 
+    fun changeCategory(category: String) {
+        _currentCategory.value = category
+        _placeList.value = getPlaceListFor(category)
+    }
+
+    private fun getPlaceListFor(category: String): List<Place> {
+        val target = category.split(" ")[0]
+        return if (target == strCategoryAll) {
+            allPlaces
+        } else {
+            allPlaces.filter { it.category == target }
+        }
+    }
+
     private fun initPlaceData() {
         PlaceDataProvider.getAllData(
-                success = { _placeList.value = it.places },
+                success = {
+                    allPlaces = it.places
+                    _placeList.value = it.places
+                },
                 failed = { _errorState.value = true }
         )
     }
@@ -47,8 +62,7 @@ class MainViewModel : ViewModel() {
     private fun getCategoryList(categoryMap: HashMap<String, Int>): List<String> {
         val categories = mutableListOf<String>()
         val totalDataCount =  categoryMap.values.sum()
-        val categoryAll = StringUtil.getString(R.string.category_all)
-        categories.add("$categoryAll ($totalDataCount)")
+        categories.add("$strCategoryAll ($totalDataCount)")
         _currentCategory.value = categories[0]
 
         val categoryList = categoryMap
@@ -60,6 +74,10 @@ class MainViewModel : ViewModel() {
 
         categories.addAll(categoryList)
         return categories
+    }
+
+    companion object {
+        private val strCategoryAll = StringUtil.getString(R.string.category_all)
     }
 
 }
