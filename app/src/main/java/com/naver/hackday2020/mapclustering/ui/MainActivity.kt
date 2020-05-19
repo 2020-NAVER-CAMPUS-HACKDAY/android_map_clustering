@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.hackday2020.mapclustering.R
 import com.naver.hackday2020.mapclustering.clustering.Cluster
@@ -16,6 +17,7 @@ import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_category.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -33,21 +35,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.lifecycleOwner = this@MainActivity
 
         (map as MapFragment).getMapAsync(this)
-        sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
-
+        fab.setOnClickListener { showNavView() }
         subscribeUI()
+
+        sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        viewModel.initPlaceData()
+        viewModel.initData()
     }
 
     private fun subscribeUI() {
         val owner = this
         with (viewModel) {
             placeList.observe(owner, Observer { startClustering(it) })
+            categoryList.observe(owner, Observer { setUpCategoryList(it) })
             errorState.observe(owner, Observer { if (it) showSnack() })
+            currentCategory.observe(owner, Observer { current_category.text = it })
         }
     }
 
@@ -57,6 +62,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
             cluster()
+        }
+    }
+
+    private fun setUpCategoryList(category: List<String>) {
+        category_recycler.run {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = CategoryRecyclerAdapter(category).apply {
+                setOnItemClickListener {
+                    viewModel.changeCategory(it)
+                    hideNavView()
+                }
+            }
         }
     }
 
@@ -77,11 +94,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun moveCameraTo(position: LatLng) {
         val cameraUpdate = CameraUpdate.scrollTo(position)
-            .animate(CameraAnimation.Easing)
+                .animate(CameraAnimation.Easing)
         naverMap.moveCamera(cameraUpdate)
     }
 
-    private fun showSnack() {
-        layout_map.showSnack(R.string.loading_error_msg)
-    }
+    private fun showSnack() = drawer_layout.showSnack(R.string.loading_error_msg)
+
+    private fun showNavView() = drawer_layout.openDrawer(nav_view)
+    private fun hideNavView() = drawer_layout.closeDrawer(nav_view)
 }
