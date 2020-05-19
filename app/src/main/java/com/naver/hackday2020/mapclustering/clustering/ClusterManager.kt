@@ -67,6 +67,11 @@ class ClusterManager<T : ClusterItem>(private val map: NaverMap) : NaverMap.OnCa
         }
     }
 
+    fun updateItems(items: Collection<T>) {
+        clearItems()
+        addItems(items)
+    }
+
     fun addItems(items: Collection<T>) {
         internalLockSafe {
             clusterAlgorithm.addItems(items)
