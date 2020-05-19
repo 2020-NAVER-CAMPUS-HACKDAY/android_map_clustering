@@ -5,4 +5,5 @@
     <string name="cancel">취소</string>
     <string name="loading_error_msg">지도에 표시할 정보를 불러오던 중 오류가 발생했습니다.</string>
     <string name="place_image">음식점 이미지</string>
+    <string name="category_all">전체</string>
 </resources>

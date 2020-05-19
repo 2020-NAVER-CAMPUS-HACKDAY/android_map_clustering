@@ -3,10 +3,10 @@ package com.naver.hackday2020.mapclustering.clustering.algo
 import android.util.Log
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
-import com.naver.hackday2020.mapclustering.geometry.Bounds
-import com.naver.hackday2020.mapclustering.geometry.Point
-import com.naver.hackday2020.mapclustering.projection.SphericalMercatorProjection
-import com.naver.hackday2020.mapclustering.quadtree.PointQuadTree
+import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Bounds
+import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Point
+import com.naver.hackday2020.mapclustering.clustering.algo.projection.SphericalMercatorProjection
+import com.naver.hackday2020.mapclustering.clustering.algo.quadtree.PointQuadTree
 import com.naver.maps.geometry.LatLng
 import kotlin.math.pow
 
