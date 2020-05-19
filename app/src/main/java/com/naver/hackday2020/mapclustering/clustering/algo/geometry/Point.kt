@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package com.naver.hackday2020.mapclustering.geometry
+package com.naver.hackday2020.mapclustering.clustering.algo.geometry
 
 data class Point(val x: Double, val y: Double)

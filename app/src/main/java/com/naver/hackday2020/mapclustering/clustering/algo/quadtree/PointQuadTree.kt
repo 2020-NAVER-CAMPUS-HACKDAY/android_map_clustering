@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.naver.hackday2020.mapclustering.quadtree
+package com.naver.hackday2020.mapclustering.clustering.algo.quadtree
 
-import com.naver.hackday2020.mapclustering.geometry.Bounds
-import com.naver.hackday2020.mapclustering.geometry.Point
+import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Bounds
+import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Point
 
 /**
  * A quad tree which tracks items with a Point geometry.

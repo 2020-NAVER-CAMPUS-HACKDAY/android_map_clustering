@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 class PreCachingAlgorithmDecorator<T : ClusterItem>(
     private val algorithm: Algorithm<T>
 ) : BaseAlgorithm<T>() {
-    private val cache = LruCache<Int, Set<Cluster<T>>>(5)
+    private val cache = LruCache<Int, Set<Cluster<T>>>(10)
     private val cacheLock = ReentrantReadWriteLock()
 
     override val items: Collection<T>

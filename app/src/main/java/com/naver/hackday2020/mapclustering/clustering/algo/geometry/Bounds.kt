@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.naver.hackday2020.mapclustering.geometry
+package com.naver.hackday2020.mapclustering.clustering.algo.geometry
 
 /**
  * Represents an area in the cartesian plane.

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.naver.hackday2020.mapclustering.projection
+package com.naver.hackday2020.mapclustering.clustering.algo.projection
 
-import com.naver.hackday2020.mapclustering.geometry.Point
+import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Point
 import com.naver.maps.geometry.LatLng
 import kotlin.math.atan
 import kotlin.math.exp
