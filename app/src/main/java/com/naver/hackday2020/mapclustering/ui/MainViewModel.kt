@@ -61,7 +61,7 @@ class MainViewModel : ViewModel() {
 
     private fun getCategoryList(categoryMap: HashMap<String, Int>): List<String> {
         val categories = mutableListOf<String>()
-        val totalDataCount =  categoryMap.values.sum()
+        val totalDataCount = categoryMap.values.sum()
         categories.add("$strCategoryAll ($totalDataCount)")
         _currentCategory.value = categories[0]
 
