@@ -13,6 +13,7 @@ import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
 import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
+import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -71,10 +72,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         category_recycler.run {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = CategoryRecyclerAdapter(category).apply {
-                setOnItemClickListener {
-                    viewModel.changeCategory(it)
-                    hideNavView()
-                }
+                setOnItemClickListener (object : OnItemClickListener<String> {
+                    override fun onItemClick(item: String) {
+                        viewModel.changeCategory(item)
+                        hideNavView()
+                    }
+                })
             }
         }
     }

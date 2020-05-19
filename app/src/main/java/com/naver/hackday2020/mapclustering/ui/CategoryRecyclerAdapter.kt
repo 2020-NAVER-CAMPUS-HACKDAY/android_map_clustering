@@ -11,19 +11,10 @@ class CategoryRecyclerAdapter(
     private val categories: List<String>
 ): RecyclerView.Adapter<CategoryRecyclerAdapter.CategoryViewHolder>() {
 
-    private var onCategoryClick : OnItemClickListener<String> =
-            object : OnItemClickListener<String> {
-                override fun onItemClick(item: String) {
-                    // do nothing
-                }
-            }
+    private var onCategoryClickListener : OnItemClickListener<String>? = null
 
-    fun setOnItemClickListener(onClick: (item: String) -> Unit) {
-        onCategoryClick = object : OnItemClickListener<String> {
-            override fun onItemClick(item: String) {
-                onClick(item)
-            }
-        }
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener<String>?) {
+        onCategoryClickListener = onItemClickListener
     }
 
     inner class CategoryViewHolder(
@@ -32,7 +23,7 @@ class CategoryRecyclerAdapter(
         fun bind(position: Int) {
             val category = categories[position]
             binding.categoryName.text = category
-            binding.itemCategory.setOnClickListener { onCategoryClick.onItemClick(category) }
+            binding.itemCategory.setOnClickListener { onCategoryClickListener?.onItemClick(category) }
         }
     }
 
