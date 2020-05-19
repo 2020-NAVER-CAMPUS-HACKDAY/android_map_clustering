@@ -18,7 +18,6 @@ import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_category.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             placeList.observe(owner, Observer { startClustering(it) })
             categoryList.observe(owner, Observer { setUpCategoryList(it) })
             errorState.observe(owner, Observer { if (it) showSnack() })
-            currentCategory.observe(owner, Observer { current_category.text = it })
+            currentCategory.observe(owner, Observer { binding.layoutCategory.currentCategory = it })
         }
     }
 
@@ -69,7 +68,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setUpCategoryList(category: List<String>) {
-        category_recycler.run {
+        binding.layoutCategory.categoryRecycler.run {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = CategoryRecyclerAdapter(category).apply {
                 setOnItemClickListener (object : OnItemClickListener<String> {
@@ -105,6 +104,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun showSnack() = binding.drawerLayout.showSnack(R.string.loading_error_msg)
 
-    private fun showNavView() = binding.drawerLayout.openDrawer(nav_view)
-    private fun hideNavView() = binding.drawerLayout.closeDrawer(nav_view)
+    private fun showNavView() = binding.drawerLayout.openDrawer(binding.navView)
+    private fun hideNavView() = binding.drawerLayout.closeDrawer(binding.navView)
 }

@@ -54,8 +54,13 @@
             android:layout_width="@dimen/nav_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/layout_category" />
+            android:fitsSystemWindows="true">
+
+            <include
+                layout="@layout/layout_category"
+                android:id="@+id/layout_category"/>
+
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
