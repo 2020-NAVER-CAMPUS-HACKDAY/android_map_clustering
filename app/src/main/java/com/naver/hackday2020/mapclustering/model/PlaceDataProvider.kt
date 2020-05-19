@@ -24,8 +24,8 @@ object PlaceDataProvider {
             PlaceList.serializer(),
             object : OnDataLoadedCallback<PlaceList> {
                 override fun onDataReady(data: PlaceList) {
-                    success(data)
                     placeList = data
+                    success(data)
                     isDataReady = true
                 }
 
