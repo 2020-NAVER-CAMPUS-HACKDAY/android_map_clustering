@@ -5,4 +5,35 @@
     <string name="cancel">취소</string>
     <string name="loading_error_msg">지도에 표시할 정보를 불러오던 중 오류가 발생했습니다.</string>
     <string name="place_image">음식점 이미지</string>
+
+    <string name="place_type_restaurant">식당</string>
+    <string name="place_type_cafe">카페</string>
+    <string name="place_type_bar">주점</string>
+
+    <string-array name="place_cafe">
+        <item>카페</item>
+        <item>카페,디저트</item>
+        <item>케이크전문</item>
+        <item>과일,주스전문</item>
+        <item>도넛</item>
+        <item>차</item>
+        <item>와플</item>
+        <item>떡카페</item>
+        <item>다방</item>
+        <item>테이크아웃커피</item>
+        <item>아름다운커피</item>
+        <item>크레페</item>
+        <item>베이커리</item>
+    </string-array>
+    <string-array name="place_bar">
+        <item>전통,민속주점</item>
+        <item>바(BAR)</item>
+        <item>술집</item>
+        <item>이자카야</item>
+        <item>단란주</item>
+        <item>와인</item>
+        <item>맥주,호프</item>
+        <item>요리주점</item>
+        <item>유흥주점</item>
+    </string-array>
 </resources>
