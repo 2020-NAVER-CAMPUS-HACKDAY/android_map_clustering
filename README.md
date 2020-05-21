@@ -20,9 +20,9 @@
 
 ### 개발 결과물
 
-|                            zmffj                             |                           사용예시                           |
+|                            클러스터링 적용 전 |                           클러스터링 적용 후                           |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://github.com/2020-NAVER-CAMPUS-HACKDAY/android_map_clustering/blob/master/screenshot/screenshot1.png" width="300" /> | <img src="https://github.com/2020-NAVER-CAMPUS-HACKDAY/android_map_clustering/blob/master/screenshot/screenshot2.jpeg" width="300" /> |
+| <img src="https://github.com/2020-NAVER-CAMPUS-HACKDAY/android_map_clustering/blob/master/screenshot/screenshot1.png" width="300" /> | <img src="https://github.com/2020-NAVER-CAMPUS-HACKDAY/android_map_clustering/blob/master/screenshot/screenshot2.jpeg" width="270" /> |
 
 ### 개발환경
 
