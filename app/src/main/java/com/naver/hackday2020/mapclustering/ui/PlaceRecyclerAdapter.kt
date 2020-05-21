@@ -2,25 +2,16 @@ package com.naver.hackday2020.mapclustering.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.naver.hackday2020.mapclustering.databinding.ItemBottomSheetBinding
 import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 
 
-class PlaceRecyclerAdapter : RecyclerView.Adapter<PlaceViewHolder>() {
+class PlaceRecyclerAdapter : ListAdapter<NaverPlaceItem, PlaceViewHolder>(PlaceDiffUtilCallback()) {
     var onItemClickListener: OnItemClickListener<NaverPlaceItem>? = null
 
-    private val diffUtil = AsyncListDiffer(this, PlaceDiffUtilCallback())
-
-    fun replace(newItem: NaverPlaceItem) = diffUtil.submitList(listOf(newItem))
-
-    fun replace(newItems: List<NaverPlaceItem>) = diffUtil.submitList(newItems)
-
-    fun getItem(position: Int) = diffUtil.currentList[position]
-
-    override fun getItemCount(): Int = diffUtil.currentList.size
+    fun replace(newItem: NaverPlaceItem) = submitList(listOf(newItem))
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) =
         holder.bind(getItem(position), onItemClickListener)
