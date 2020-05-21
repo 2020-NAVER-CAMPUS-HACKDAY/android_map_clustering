@@ -35,7 +35,6 @@ fun View.expandBottomSheet() {
         BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_EXPANDED
     } catch (e: IllegalArgumentException) {
         Log.e("View.expandBottomSheet", e.message ?: "IllegalArgumentException occurs")
-        e.printStackTrace()
     }
 }
 
@@ -44,7 +43,6 @@ fun View.hideBottomSheet() {
         BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_HIDDEN
     } catch (e: IllegalArgumentException) {
         Log.e("View.hideBottomSheet", e.message ?: "IllegalArgumentException occurs")
-        e.printStackTrace()
     }
 }
 
