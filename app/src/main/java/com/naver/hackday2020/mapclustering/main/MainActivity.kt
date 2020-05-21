@@ -29,21 +29,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
-    private lateinit var placeAdapter: PlaceRecyclerAdapter
+    private val placeAdapter = PlaceRecyclerAdapter()
     private lateinit var binding: ActivityMainBinding
     private lateinit var naverMap: NaverMap
     private lateinit var clusterManager: ClusterManager<NaverPlaceItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this@MainActivity
-        placeAdapter = PlaceRecyclerAdapter(this)
-        binding.rvPlaces.adapter = placeAdapter
 
-        (map as MapFragment).getMapAsync(this)
-        binding.fab.setOnClickListener { showNavView() }
+        initBinding()
         subscribeUI()
+        (map as MapFragment).getMapAsync(this)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -63,6 +59,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
             binding.layoutBottomSheet.hideBottomSheet()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        placeAdapter.onItemClickListener = this
+
+        binding.apply {
+            lifecycleOwner = this@MainActivity
+            rvPlaces.adapter = placeAdapter
+            fab.setOnClickListener { showNavView() }
         }
     }
 

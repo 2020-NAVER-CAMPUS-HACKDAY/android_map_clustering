@@ -9,9 +9,9 @@ import com.naver.hackday2020.mapclustering.databinding.ItemBottomSheetBinding
 import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 
 
-class PlaceRecyclerAdapter(
-    private val onItemClickListener: OnItemClickListener<NaverPlaceItem>? = null
-) : RecyclerView.Adapter<PlaceViewHolder>() {
+class PlaceRecyclerAdapter : RecyclerView.Adapter<PlaceViewHolder>() {
+    var onItemClickListener: OnItemClickListener<NaverPlaceItem>? = null
+
     private val diffUtil = AsyncListDiffer(this, PlaceDiffUtilCallback())
 
     fun replace(newItem: NaverPlaceItem) = diffUtil.submitList(listOf(newItem))
