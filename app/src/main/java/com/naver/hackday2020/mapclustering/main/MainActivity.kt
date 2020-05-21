@@ -85,9 +85,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
 
     private fun startClustering(placeList: List<Place>) {
         clusterManager.run {
-            updateItems(placeList.map {
-                NaverPlaceItem.from(it)
-            })
+            updateItems(placeList.map { NaverPlaceItem.from(it) })
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
             cluster()
@@ -97,9 +95,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
     private fun setUpCategoryList(category: List<String>) {
         binding.layoutCategory.categoryRecycler.run {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = CategoryRecyclerAdapter(
-                category
-            ).apply {
+            adapter = CategoryRecyclerAdapter(category).apply {
                 setOnItemClickListener(object : OnItemClickListener<String> {
                     override fun onItemClick(item: String) {
                         viewModel.changeCategory(item)
