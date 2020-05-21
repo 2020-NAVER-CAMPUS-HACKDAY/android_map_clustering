@@ -1,4 +1,4 @@
-package com.naver.hackday2020.mapclustering.ui
+package com.naver.hackday2020.mapclustering.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

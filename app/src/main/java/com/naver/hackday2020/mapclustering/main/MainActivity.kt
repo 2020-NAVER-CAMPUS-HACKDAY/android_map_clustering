@@ -1,4 +1,4 @@
-package com.naver.hackday2020.mapclustering.ui
+package com.naver.hackday2020.mapclustering.main
 
 import android.os.Bundle
 import android.view.View
@@ -15,6 +15,8 @@ import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 import com.naver.hackday2020.mapclustering.model.Place
+import com.naver.hackday2020.mapclustering.ui.CategoryRecyclerAdapter
+import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,7 +62,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun startClustering(placeList: List<Place>) {
         clusterManager.run {
-            updateItems(placeList.map { NaverPlaceItem.from(it) })
+            updateItems(placeList.map {
+                NaverPlaceItem.from(
+                    it
+                )
+            })
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
             cluster()
@@ -70,7 +76,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setUpCategoryList(category: List<String>) {
         binding.layoutCategory.categoryRecycler.run {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = CategoryRecyclerAdapter(category).apply {
+            adapter = CategoryRecyclerAdapter(
+                category
+            ).apply {
                 setOnItemClickListener (object : OnItemClickListener<String> {
                     override fun onItemClick(item: String) {
                         viewModel.changeCategory(item)
