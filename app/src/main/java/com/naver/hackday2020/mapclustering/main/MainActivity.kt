@@ -1,34 +1,36 @@
 package com.naver.hackday2020.mapclustering.main
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.hackday2020.mapclustering.R
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
 import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
+import com.naver.hackday2020.mapclustering.ext.expandBottomSheet
+import com.naver.hackday2020.mapclustering.ext.hideBottomSheet
+import com.naver.hackday2020.mapclustering.ext.isExpanded
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
 import com.naver.hackday2020.mapclustering.model.Place
 import com.naver.hackday2020.mapclustering.ui.CategoryRecyclerAdapter
 import com.naver.hackday2020.mapclustering.ui.NaverPlaceItem
+import com.naver.hackday2020.mapclustering.ui.PlaceRecyclerAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListener<NaverPlaceItem> {
 
     private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
+    private lateinit var placeAdapter: PlaceRecyclerAdapter
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var naverMap: NaverMap
     private lateinit var clusterManager: ClusterManager<NaverPlaceItem>
 
@@ -36,12 +38,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this@MainActivity
+        placeAdapter = PlaceRecyclerAdapter(this)
+        binding.rvPlaces.adapter = placeAdapter
 
         (map as MapFragment).getMapAsync(this)
         binding.fab.setOnClickListener { showNavView() }
         subscribeUI()
-
-        sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.root)
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -50,9 +52,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.initData()
     }
 
+    override fun onItemClick(item: NaverPlaceItem) {
+        naverMap.moveCamera(CameraUpdate.zoomTo(naverMap.maxZoom))
+        moveCameraPosition(item.getPosition())
+        placeAdapter.replace(item)
+    }
+
+    override fun onBackPressed() {
+        if (binding.layoutBottomSheet.isExpanded()) {
+            binding.layoutBottomSheet.hideBottomSheet()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     private fun subscribeUI() {
         val owner = this
-        with (viewModel) {
+        with(viewModel) {
             placeList.observe(owner, Observer { startClustering(it) })
             categoryList.observe(owner, Observer { setUpCategoryList(it) })
             errorState.observe(owner, Observer { if (it) showSnack() })
@@ -63,9 +79,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startClustering(placeList: List<Place>) {
         clusterManager.run {
             updateItems(placeList.map {
-                NaverPlaceItem.from(
-                    it
-                )
+                NaverPlaceItem.from(it)
             })
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
@@ -79,7 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             adapter = CategoryRecyclerAdapter(
                 category
             ).apply {
-                setOnItemClickListener (object : OnItemClickListener<String> {
+                setOnItemClickListener(object : OnItemClickListener<String> {
                     override fun onItemClick(item: String) {
                         viewModel.changeCategory(item)
                         hideNavView()
@@ -90,28 +104,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun onClusterClick(cluster: Cluster<NaverPlaceItem>) {
-        moveCameraTo(cluster.position)
+        placeAdapter.replace(cluster.items.toList())
+        moveCameraPosition(cluster.position)
 
-        // hide bottom sheet
-        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        // show bottom sheet
+        binding.layoutBottomSheet.expandBottomSheet()
     }
 
     private fun onClusterItemClick(clusterItem: NaverPlaceItem) {
-        binding.place = clusterItem.place
-        moveCameraTo(clusterItem.getPosition())
+        placeAdapter.replace(clusterItem)
+        moveCameraPosition(clusterItem.getPosition())
 
         // show bottom sheet
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.layoutBottomSheet.expandBottomSheet()
     }
 
-    private fun moveCameraTo(position: LatLng) {
-        val cameraUpdate = CameraUpdate.scrollTo(position)
-                .animate(CameraAnimation.Easing)
-        naverMap.moveCamera(cameraUpdate)
+    private fun moveCameraPosition(position: LatLng) {
+        naverMap.moveCamera(CameraUpdate.scrollTo(position).animate(CameraAnimation.Easing))
     }
 
     private fun showSnack() = binding.drawerLayout.showSnack(R.string.loading_error_msg)
 
     private fun showNavView() = binding.drawerLayout.openDrawer(binding.navView)
+
     private fun hideNavView() = binding.drawerLayout.closeDrawer(binding.navView)
 }
