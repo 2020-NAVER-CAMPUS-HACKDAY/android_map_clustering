@@ -32,9 +32,7 @@ class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>(
 
     /**
      * Update view width and height in case map size was changed.
-     * You need to recluster all the clusters, to update view state after view size changes.
-     * @param width map width
-     * @param height map height
+     * You need to recluster all the clusters, to update view state after view size changes.\
      */
     fun updateViewSize(width: Int, height: Int) {
         viewWidth = width
