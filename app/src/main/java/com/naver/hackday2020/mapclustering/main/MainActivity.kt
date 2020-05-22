@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
 
     private fun onClusterClick(cluster: Cluster<NaverPlaceItem>) {
         placeAdapter.submitList(cluster.items.toList())
+        binding.rvPlaces.scrollToPosition(0)
         moveCameraPosition(cluster.position)
 
         // show bottom sheet
