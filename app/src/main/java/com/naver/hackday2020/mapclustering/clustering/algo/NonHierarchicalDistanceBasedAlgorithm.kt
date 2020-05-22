@@ -1,6 +1,5 @@
 package com.naver.hackday2020.mapclustering.clustering.algo
 
-import android.util.Log
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterItem
 import com.naver.hackday2020.mapclustering.clustering.algo.geometry.Bounds
@@ -23,7 +22,7 @@ import kotlin.math.pow
  *
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>() {
+open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>() {
 
     /**
      * Any modifications should be synchronized on quadTree.
@@ -126,11 +125,11 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
 
         val visitedCandidates = HashSet<QuadItem<T>>()
         val results = HashSet<StaticCluster<T>>()
-        val distanceToCluster = HashMap<QuadItem<T>, Double>()
+        val itemToDistance = HashMap<QuadItem<T>, Double>()
         val itemToCluster = HashMap<QuadItem<T>, StaticCluster<T>>()
 
         synchronized(quadTree) {
-            for (candidate in quadItems) {
+            for (candidate in getClusteringItems(quadTree, discreteZoom)) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue
@@ -145,14 +144,14 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                     cluster.add(candidate.clusterItem)
                     results.add(cluster)
                     visitedCandidates.add(candidate)
-                    distanceToCluster[candidate] = 0.0
+                    itemToDistance[candidate] = 0.0
                     continue
                 }
 
                 results.add(cluster)
 
                 for (clusterItem in clusterItems) {
-                    val existingDistance = distanceToCluster[clusterItem]
+                    val existingDistance = itemToDistance[clusterItem]
                     val distance = distanceSquared(clusterItem.point, candidate.point)
                     if (existingDistance != null) {
                         // Item already belongs to another cluster. Check if it's closer to this cluster.
@@ -162,16 +161,21 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
                         // Move item to the closer cluster.
                         itemToCluster[clusterItem]!!.remove(clusterItem.clusterItem)
                     }
-                    distanceToCluster[clusterItem] = distance
+                    itemToDistance[clusterItem] = distance
                     cluster.add(clusterItem.clusterItem)
                     itemToCluster[clusterItem] = cluster
                 }
                 visitedCandidates.addAll(clusterItems)
             }
         }
-        // 결과 확인용 테스트 로그
-        Log.d(TAG, "results = $results")
         return results
+    }
+
+    internal open fun getClusteringItems(
+            quadTree: PointQuadTree<QuadItem<T>>,
+            discreteZoom: Int
+    ): Collection<QuadItem<T>> {
+        return quadItems
     }
 
     private fun distanceSquared(a: Point, b: Point): Double {
@@ -198,7 +202,6 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
     }
 
     companion object {
-        private const val TAG = "Algorithm" // 테스트 로그용 tag
         private const val DEFAULT_MAX_DISTANCE_AT_ZOOM = 100 // essentially 100 dp.
 
         private val projection = SphericalMercatorProjection(1.0)

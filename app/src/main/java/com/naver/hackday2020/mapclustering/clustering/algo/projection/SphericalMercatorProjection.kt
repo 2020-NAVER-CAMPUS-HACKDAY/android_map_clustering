@@ -23,6 +23,7 @@ import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.sin
 
+// 원형의 지구를 평면의 지도로 옮기면서 생기는 차이를 보완해주는 Projection 클래스
 class SphericalMercatorProjection(private val worldWidth: Double) {
 
     fun toPoint(latLng: LatLng): Point {
