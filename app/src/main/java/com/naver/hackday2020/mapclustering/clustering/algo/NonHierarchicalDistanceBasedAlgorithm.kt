@@ -23,7 +23,7 @@ import kotlin.math.pow
  *
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>() {
+open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>() {
 
     /**
      * Any modifications should be synchronized on quadTree.
@@ -130,7 +130,7 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         val itemToCluster = HashMap<QuadItem<T>, StaticCluster<T>>()
 
         synchronized(quadTree) {
-            for (candidate in quadItems) {
+            for (candidate in getClusteringItems(quadTree, discreteZoom)) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue
@@ -172,6 +172,13 @@ class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : BaseAlgorithm<T>(
         // 결과 확인용 테스트 로그
         Log.d(TAG, "results = $results")
         return results
+    }
+
+    internal open fun getClusteringItems(
+            quadTree: PointQuadTree<QuadItem<T>>,
+            discreteZoom: Int
+    ): Collection<QuadItem<T>> {
+        return quadItems
     }
 
     private fun distanceSquared(a: Point, b: Point): Double {

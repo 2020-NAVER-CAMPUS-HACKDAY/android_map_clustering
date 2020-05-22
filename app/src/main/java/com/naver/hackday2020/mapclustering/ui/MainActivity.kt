@@ -1,6 +1,7 @@
 package com.naver.hackday2020.mapclustering.ui
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.hackday2020.mapclustering.R
 import com.naver.hackday2020.mapclustering.clustering.Cluster
 import com.naver.hackday2020.mapclustering.clustering.ClusterManager
+import com.naver.hackday2020.mapclustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import com.naver.hackday2020.mapclustering.databinding.ActivityMainBinding
 import com.naver.hackday2020.mapclustering.ext.showSnack
 import com.naver.hackday2020.mapclustering.listener.OnItemClickListener
@@ -59,7 +61,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startClustering(placeList: List<Place>) {
+        val viewBasedAlgorithm = NonHierarchicalViewBasedAlgorithm<NaverPlaceItem>(0, 0)
+        val metrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(metrics)
+        viewBasedAlgorithm.updateViewSize(metrics.widthPixels, metrics.heightPixels)
+
         clusterManager.run {
+            algorithm = viewBasedAlgorithm
             updateItems(placeList.map { NaverPlaceItem.from(it) })
             setOnClusterClickListener { onClusterClick(it) }
             setOnClusterItemClickListener { onClusterItemClick(it) }
